@@ -2,11 +2,9 @@
 
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="MainWindow"
-            xmlns:fx="http://javafx.com/fxml/1"
-            xmlns="http://javafx.com/javafx/11.0.1"
-            fx:controller="Application.Controller.MainWindowController">
+<AnchorPane fx:id="MainWindow" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.MainWindowController">
 
-    <fx:include source="LeftMenu.fxml"/>
-    <fx:include source="CanvasPane.fxml"/>
+    <fx:include fx:id="leftMenu" source="LeftMenu.fxml" />
+    <fx:include fx:id="canvasPane" source="CanvasPane.fxml" />
+    <fx:include fx:id="bottomBar" source="BottomBar.fxml" />
 </AnchorPane>

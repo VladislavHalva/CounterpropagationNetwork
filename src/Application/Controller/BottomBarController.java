@@ -5,7 +5,7 @@ import javafx.fxml.Initializable;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CanvasPaneController implements Initializable {
+public class BottomBarController implements Initializable {
 
     private CLocator locator;
 

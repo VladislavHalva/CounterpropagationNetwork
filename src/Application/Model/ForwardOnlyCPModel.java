@@ -1,13 +1,13 @@
 package Application.Model;
 
-public class FullCPModel extends CPModel{
+public class ForwardOnlyCPModel extends CPModel {
 
     /**
      * Ctor
      * @param steps
      * @param learningCoeff
      */
-    public FullCPModel(int steps, double learningCoeff, int datasetSize) {
+    public ForwardOnlyCPModel(int steps, double learningCoeff, int datasetSize) {
         super(steps, learningCoeff, datasetSize);
     }
 

@@ -21,7 +21,7 @@ public class CLocator {
         this.canvasPaneController = canvasPaneController;
         this.bottomBarController = bottomBarController;
 
-        this.appStateCarrier = new AppStateCarrier();
+        this.appStateCarrier = new AppStateCarrier(this);
     }
 
     public LeftMenuController getLeftMenuController() {

@@ -12,15 +12,17 @@
 
 <AnchorPane prefHeight="1000" prefWidth="250" style="-fx-background-color: aliceblue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.LeftMenuController">
    <children>
-      <Button fx:id="ForwardCPButton" disable="true" layoutY="2.0" mnemonicParsing="false" prefWidth="125.0" text="Forward Only" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
+      <Button fx:id="ForwardCPButton" layoutY="2.0" mnemonicParsing="false" prefWidth="125.0" text="Forward Only" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Button fx:id="FullCPButton" disable="true" layoutX="198.0" layoutY="2.0" mnemonicParsing="false" prefWidth="125.0" text="Full" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Label layoutX="15.0" layoutY="63.0" text="Steps" />
       <TextField fx:id="StepsField" layoutX="15.0" layoutY="86.0" prefHeight="25.0" prefWidth="62.0" />
+      <Label layoutX="85.0" layoutY="63.0" text="Dataset size" />
+      <TextField fx:id="DatasetSizeField" layoutX="82.0" layoutY="86.0" prefHeight="25.0" prefWidth="151.0" />
       <Label layoutX="16.0" layoutY="120.0" text="Learning Coefficient" />
       <Slider fx:id="LearnCoeffSlider" layoutX="15.0" layoutY="146.0" prefHeight="14.0" prefWidth="219.0" />
       <Label fx:id="LearnCoeffValue" layoutX="204.0" layoutY="120.0" text="0.5" />
       <Button fx:id="InitializeButton" layoutX="17.0" layoutY="201.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="219.0" text="Initialize" />
-      <Button fx:id="StepButton" disable="true" layoutX="17.0" layoutY="213.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Step" />
+      <Button fx:id="StepButton" disable="true" layoutX="18.0" layoutY="226.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="135.0" text="Step" />
       <Button fx:id="StopButton" disable="true" layoutX="152.0" layoutY="276.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Stop" textFill="RED" />
       <Button fx:id="RunButton" disable="true" layoutX="152.0" layoutY="226.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="84.0" text="Run" />
       <Button fx:id="ToOutLayerLearningButton" disable="true" layoutX="17.0" layoutY="251.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="219.0" text="Jump To Output Layer Learning" />
@@ -49,7 +51,5 @@
       <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="17.0" layoutX="181.0" layoutY="513.0" stroke="BLACK" strokeType="INSIDE" width="37.0" />
 
       <VBox fx:id="MessageBox" layoutX="24.0" layoutY="535.0" maxWidth="201.0" prefWidth="219.0" />
-      <TextField layoutX="82.0" layoutY="86.0" prefHeight="25.0" prefWidth="151.0" />
-      <Label layoutX="85.0" layoutY="63.0" text="Dataset size" />
    </children>
 </AnchorPane>

@@ -2,6 +2,7 @@ package Application.Controller;
 
 import Application.Enums.AppStates;
 import Application.Enums.CPType;
+import Application.View.FullCPNet;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -17,6 +18,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.util.converter.IntegerStringConverter;
 
+import javax.xml.crypto.Data;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Timer;
@@ -27,8 +29,9 @@ public class LeftMenuController implements Initializable {
 
     private CLocator locator;
 
-    private double LearnCoeff = 0.0;
-    private int Steps = 0;
+    private double LearnCoeff = 0.5;
+    private int Steps = 10;
+    private int DatasetSize = 20;
     private int StepsLimit = 100;
 
     private CPType chosenCPType = CPType.FULL; //TODO change if Forward only will be implemented
@@ -41,6 +44,9 @@ public class LeftMenuController implements Initializable {
 
     @FXML
     TextField StepsField;
+
+    @FXML
+    TextField DatasetSizeField;
 
     @FXML
     Slider LearnCoeffSlider;
@@ -74,8 +80,33 @@ public class LeftMenuController implements Initializable {
 
         initLearnCoeffSlider();
         initStepsTextField();
+        initDatasetTextField();
         initInitializeButton();
         initStopButton();
+        initCPTypeButtons();
+    }
+
+    private void initCPTypeButtons() {
+        //first is always set Full
+        FullCPButton.setDisable(true);
+
+        ForwardCPButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                ForwardCPButton.setDisable(true);
+                FullCPButton.setDisable(false);
+                chosenCPType = CPType.FORWARD_ONLY;
+            }
+        });
+
+        FullCPButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                FullCPButton.setDisable(true);
+                ForwardCPButton.setDisable(false);
+                chosenCPType = CPType.FULL;
+            }
+        });
     }
 
     private void initInitializeButton() {
@@ -83,15 +114,17 @@ public class LeftMenuController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 Steps = Integer.parseInt(StepsField.textProperty().getValue());
+                DatasetSize = Integer.parseInt(DatasetSizeField.textProperty().getValue());
 
-                if(Steps > 1 && Steps <= StepsLimit && LearnCoeff > 0){
+                if(Steps > 1 && Steps <= StepsLimit && LearnCoeff > 0 && DatasetSize > 0){
                     //TODO read dataset size
-                    locator.getAppStateCarrier().startLearning(chosenCPType, Steps, LearnCoeff, 20);
+                    locator.getAppStateCarrier().startLearning(chosenCPType, Steps, LearnCoeff, DatasetSize);
                 }
                 else{
                     //wrong values for learning
                     showMessage("", "Number of steps has to be between 1 and " + StepsLimit +
-                            " and learning coefficient can not be zero.", new Color(1,0,0,1));
+                            " and learning coefficient can not be zero. Dataset size must be more than zero too.",
+                            new Color(1,0,0,1));
                 }
             }
         });
@@ -107,7 +140,7 @@ public class LeftMenuController implements Initializable {
     }
 
     private void initStepsTextField() {
-        int defaultValue = 0;
+        int defaultValue = 10;
 
         TextFormatter<Integer> formatter = new TextFormatter<Integer>(
                 new IntegerStringConverter(),
@@ -117,6 +150,19 @@ public class LeftMenuController implements Initializable {
                 });
 
         StepsField.setTextFormatter(formatter);
+    }
+
+    private void initDatasetTextField() {
+        int defaultValue = 20;
+
+        TextFormatter<Integer> formatter = new TextFormatter<Integer>(
+                new IntegerStringConverter(),
+                defaultValue,
+                c -> {
+                    return Pattern.matches("\\d{0,3}", c.getText()) ? c : null;
+                });
+
+        DatasetSizeField.setTextFormatter(formatter);
     }
 
     private void initLearnCoeffSlider() {
@@ -148,6 +194,8 @@ public class LeftMenuController implements Initializable {
         StopButton.setDisable(newState != AppStates.LEARNING_RUNNING);
         ToOutLayerLearningButton.setDisable(newState != AppStates.LEARNING_RUNNING);
         RunRecognitionButton.setDisable(newState != AppStates.LEARNED);
+        ForwardCPButton.setDisable(newState != AppStates.READY);
+        FullCPButton.setDisable(true);
 
         //TODO add other controls
     }

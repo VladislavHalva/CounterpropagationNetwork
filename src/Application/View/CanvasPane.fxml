@@ -9,6 +9,8 @@
 <AnchorPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="Application.Controller.CanvasPaneController"
+            fx:id="CanvasPane"
+            minHeight="500" minWidth="1000"
             prefHeight="400.0" prefWidth="600.0"
             AnchorPane.bottomAnchor="170.0" AnchorPane.leftAnchor="250.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
     

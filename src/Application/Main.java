@@ -12,8 +12,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(getClass().getResource("View/MainWindow.fxml"));
         primaryStage.setTitle("Counterpropagation Network");
-        primaryStage.setScene(new Scene(root, 300, 275));
-        primaryStage.setMaximized(true);
+        primaryStage.setScene(new Scene(root, 1200, 700));
+        primaryStage.setMinWidth(1200);
+        primaryStage.setMinHeight(700);
+//        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 

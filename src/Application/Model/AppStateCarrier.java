@@ -27,10 +27,10 @@ public class AppStateCarrier {
             switchButtonActivityAccordingToState(AppStates.LEARNING_RUNNING);
 
             if(chosenCPType == CPType.FULL){
-                this.RunningCP = new FullCPModel(steps, learningCoeffs, datasetSize);
+                this.RunningCP = new FullCPModel(steps, learningCoeffs, datasetSize, locator);
             }
             else{
-                this.RunningCP = new ForwardOnlyCPModel(steps, learningCoeffs, datasetSize);
+                this.RunningCP = new ForwardOnlyCPModel(steps, learningCoeffs, datasetSize, locator);
             }
         }
     }
@@ -49,6 +49,7 @@ public class AppStateCarrier {
             State = AppStates.READY;
             this.ChosenCPType = null;
             this.RunningCP = null;
+            locator.getCanvasPaneController().cleanCanvas();
             switchButtonActivityAccordingToState(AppStates.READY);
         }
     }

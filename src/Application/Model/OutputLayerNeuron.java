@@ -1,27 +1,39 @@
 package Application.Model;
 
-import Application.Model.HiddenLayerNeuron;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
-import javafx.scene.text.Text;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Random;
 
-public class OutputLayerNeuron extends Circle {
+public class OutputLayerNeuron extends Neuron {
 
     ArrayList<Double> weights = new ArrayList<>();
     ArrayList<Line> weightLines = new ArrayList<>();
-    double Output = 0;
-    Text OutputLabel; //TODO change when calculated sthg
 
     public OutputLayerNeuron(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons){
         super();
-        OutputLabel = new Text(String.valueOf(Output));
         createConnectionToHiddenLayer(hiddenLayerNeurons);
+        initWeightsVector();
+    }
 
-        //TODO values handling
-        //TODO output values and inner value ?
+    /**
+     *
+     */
+    private void initWeightsVector() {
+        for (int i = 0; i < 3; i++) {
+            weights.add(0.0);
+        }
+    }
+
+    /**
+     *
+     */
+    public void generateRandomWeights(){
+        Random rd = new Random();
+
+        for(Double weight : weights){
+            weight = rd.nextDouble();
+        }
     }
 
     private void createConnectionToHiddenLayer(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons) {
@@ -38,6 +50,7 @@ public class OutputLayerNeuron extends Circle {
         }
     }
 
+    @Override
     public ArrayList<Line> getConnections(){
         return weightLines;
     }

@@ -5,8 +5,9 @@ import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
-public class HiddenLayerNeuron extends Circle {
+public class HiddenLayerNeuron extends Neuron {
 
     ArrayList<Double> weightsFirst = new ArrayList<>();
     ArrayList<Double> weightsSecond = new ArrayList<>();
@@ -20,9 +21,7 @@ public class HiddenLayerNeuron extends Circle {
     public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector){
         super();
         createConnectionToInput(firstInputVector);
-
-        //TODO values handling
-        //TODO output values and inner value ?
+        initWeightsVectors();
     }
 
     /**
@@ -33,6 +32,42 @@ public class HiddenLayerNeuron extends Circle {
     public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, ArrayList<InputPoint> secondInputVector){
         super();
         createConnectionsToInputs(firstInputVector, secondInputVector);
+        initWeightsVectors();
+    }
+
+    /**
+     *
+     */
+    private void initWeightsVectors() {
+        for (int i = 0; i < 3; i++) {
+            weightsFirst.add(0.0);
+            weightsSecond.add(0.0);
+        }
+    }
+
+    /**
+     *
+     */
+    public void generateRandomWeightsFull(){
+        Random rd = new Random();
+
+        for (int i = 0; i < weightsFirst.size(); i++) {
+            weightsFirst.set(i, rd.nextDouble());
+        }
+        for (int i = 0; i < weightsSecond.size(); i++) {
+            weightsSecond.set(i, rd.nextDouble());
+        }
+    }
+
+    /**
+     *
+     */
+    public void generateRandomWeightsForward(){
+        Random rd = new Random();
+
+        for (int i = 0; i < weightsFirst.size(); i++) {
+            weightsFirst.set(i, rd.nextDouble());
+        }
     }
 
     /**
@@ -66,6 +101,7 @@ public class HiddenLayerNeuron extends Circle {
         }
     }
 
+    @Override
     public ArrayList<Line> getConnections(){
         var connections = new ArrayList<Line>();
         connections.addAll(firstWeightLines);

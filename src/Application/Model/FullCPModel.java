@@ -1,8 +1,6 @@
 package Application.Model;
 
 import Application.Controller.CLocator;
-import Application.Enums.CPType;
-import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
 
@@ -35,6 +33,58 @@ public class FullCPModel extends CPModel{
                 secondOutputLayerNeurons);
     }
 
+    @Override
+    protected void updateOutputLayerWeights() {
+
+    }
+
+    @Override
+    protected void runCompetitionPhaseTwo() {
+
+    }
+
+    @Override
+    protected void attachInputVectorsPhaseTwo() {
+
+    }
+
+    @Override
+    protected void generateOutputLayerWeights() {
+    }
+
+    @Override
+    protected void initializePhaseTwo() {
+
+    }
+
+    @Override
+    protected void updateHiddenLayerWeights() {
+
+    }
+
+    @Override
+    protected void runCompetitionPhaseOne() {
+        //TODO first
+    }
+
+    @Override
+    protected void attachInputVectorsPhaseOne() {
+        for (int i = 0; i < firstInputVector.size(); i++) {
+            firstInputVector.get(i).setValue(dataset.get(i).getKey()[i]);
+        }
+        for (int i = 0; i < secondInputVector.size(); i++) {
+            secondInputVector.get(i).setValue(dataset.get(i).getValue()[i]);
+        }
+    }
+
+    @Override
+    protected void generateHiddenLayerWeights() {
+        for (HiddenLayerNeuron hiddenLayerNeuron : hiddenLayerNeurons){
+            hiddenLayerNeuron.generateRandomWeightsFull();
+        }
+        locator.getCanvasPaneController().visualizeWeightsGenerating(hiddenLayerNeurons);
+    }
+
     private void createNeuronsAndInputPoints() {
         for (int i = 0; i < 3; i++) {
             firstInputVector.add(new InputPoint());
@@ -50,22 +100,12 @@ public class FullCPModel extends CPModel{
     }
 
     @Override
-    public void makeStep() {
-
-    }
-
-    @Override
     public void run() {
 
     }
 
     @Override
     public void jumpToOutputLayerLearning() {
-
-    }
-
-    @Override
-    public void stopLearning() {
 
     }
 }

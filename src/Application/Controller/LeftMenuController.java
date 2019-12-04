@@ -34,7 +34,7 @@ public class LeftMenuController implements Initializable {
     private int DatasetSize = 20;
     private int StepsLimit = 100;
 
-    private CPType chosenCPType = CPType.FULL; //TODO change if Forward only will be implemented
+    private CPType chosenCPType = CPType.FULL;
 
     @FXML
     Button ForwardCPButton;
@@ -84,6 +84,32 @@ public class LeftMenuController implements Initializable {
         initInitializeButton();
         initStopButton();
         initCPTypeButtons();
+        initLearningControlButtons();
+    }
+
+    private void initLearningControlButtons() {
+        StepButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                locator.getAppStateCarrier().makeLearningStep();
+            }
+        });
+
+        RunButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                locator.getAppStateCarrier().runLearning();
+            }
+        });
+
+        ToOutLayerLearningButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                if(locator.getAppStateCarrier().getRunningCPModel() != null){
+                    locator.getAppStateCarrier().getRunningCPModel().jumpToOutputLayerLearning();
+                }
+            }
+        });
     }
 
     private void initCPTypeButtons() {
@@ -116,8 +142,7 @@ public class LeftMenuController implements Initializable {
                 Steps = Integer.parseInt(StepsField.textProperty().getValue());
                 DatasetSize = Integer.parseInt(DatasetSizeField.textProperty().getValue());
 
-                if(Steps > 1 && Steps <= StepsLimit && LearnCoeff > 0 && DatasetSize > 0){
-                    //TODO read dataset size
+                if(Steps > 0 && Steps <= StepsLimit && LearnCoeff > 0 && DatasetSize > 0){
                     locator.getAppStateCarrier().startLearning(chosenCPType, Steps, LearnCoeff, DatasetSize);
                 }
                 else{

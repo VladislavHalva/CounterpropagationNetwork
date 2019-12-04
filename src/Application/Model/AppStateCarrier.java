@@ -10,8 +10,7 @@ public class AppStateCarrier {
     /**
      * Holds the apps state - control point.
      */
-    private AppStates State = AppStates.READY;
-
+    private AppStates AppState = AppStates.READY;
 
     private CPType ChosenCPType = null;
     private CPModel RunningCP = null;
@@ -21,8 +20,8 @@ public class AppStateCarrier {
     }
 
     public void startLearning(CPType chosenCPType, int steps, double learningCoeffs, int datasetSize) {
-        if(State == AppStates.READY){
-            State = AppStates.LEARNING_RUNNING;
+        if(AppState == AppStates.READY){
+            AppState = AppStates.LEARNING_RUNNING;
             this.ChosenCPType = chosenCPType;
             switchButtonActivityAccordingToState(AppStates.LEARNING_RUNNING);
 
@@ -36,25 +35,43 @@ public class AppStateCarrier {
     }
 
     public void learningSuccesfullyFinished(){
-        if(State == AppStates.LEARNING_RUNNING){
-            State = AppStates.LEARNED;
+        if(AppState == AppStates.LEARNING_RUNNING){
+            AppState = AppStates.LEARNED;
             switchButtonActivityAccordingToState(AppStates.LEARNED);
+
+            locator.getLeftMenuController().showMessage("LEARNING FINISHED", "", null);
 
             //TODO ready to evaluation
         }
     }
 
     public void learningInterrupted(){
-        if(State == AppStates.LEARNING_RUNNING){
-            State = AppStates.READY;
-            this.ChosenCPType = null;
+        if(AppState == AppStates.LEARNING_RUNNING){
+            AppState = AppStates.READY;
+            this.ChosenCPType = CPType.FULL;
             this.RunningCP = null;
             locator.getCanvasPaneController().cleanCanvas();
             switchButtonActivityAccordingToState(AppStates.READY);
         }
     }
 
+    public void makeLearningStep(){
+        if(AppState == AppStates.LEARNING_RUNNING) {
+            RunningCP.makeStep();
+        }
+    }
+
+    public void runLearning() {
+        if (AppState == AppStates.LEARNING_RUNNING) {
+            RunningCP.run();
+        }
+    }
+
     public void switchButtonActivityAccordingToState(AppStates newState){
         locator.getLeftMenuController().enableButtonsAccordingToState(newState);
+    }
+
+    public CPModel getRunningCPModel(){
+        return RunningCP;
     }
 }

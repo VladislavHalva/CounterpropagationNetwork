@@ -6,7 +6,7 @@ import javafx.scene.text.Text;
 
 public class InputPoint extends Circle {
 
-    private double Value = 0;
+    private double Value = 0.0;
     private Text ValueLabel;
 
     public InputPoint(){
@@ -18,6 +18,14 @@ public class InputPoint extends Circle {
 
     public void setValue(double value){
         this.Value = value;
-        ValueLabel.setText(String.valueOf(Value));
+        ValueLabel.setText(String.format("%.2f", Value));
+    }
+
+    public double getValue() {
+        return Value;
+    }
+
+    public Text getValueLabel(){
+        return ValueLabel;
     }
 }

@@ -37,20 +37,6 @@ public class FullCPModel extends CPModel{
     }
 
     @Override
-    public void run() {
-
-    }
-
-    @Override
-    public void jumpToOutputLayerLearning() {
-
-    }
-
-
-
-
-
-    @Override
     protected void generateHiddenLayerWeights() {
         for (HiddenLayerNeuron hiddenLayerNeuron : hiddenLayerNeurons){
             hiddenLayerNeuron.generateRandomWeights();
@@ -63,20 +49,27 @@ public class FullCPModel extends CPModel{
         //remove highlight after generating weights
         locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(hiddenLayerNeurons);
         //remove highlight of neuron in case of learning loop
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
-        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(winnerHLNeuron);
-        if(winnerHLNeuron != null){
-        winnerHLNeuron.setOutput(0);
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
+        if(victoriousHLNeuron != null){
+        victoriousHLNeuron.setOutput(0);
         }
-        winnerHLNeuron = null;
+        victoriousHLNeuron = null;
 
+        Double[] firstInputColor = {0.0,0.0,0.0};
         for (int i = 0; i < firstInputVector.size(); i++) {
             firstInputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getKey()[i]);
-        }
-        for (int i = 0; i < secondInputVector.size(); i++) {
-            secondInputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getValue()[i]);
+            firstInputColor[i] = dataset.get(CurrentStep%dataset.size()).getKey()[i];
         }
 
+        Double[] secondInputColor = {0.0,0.0,0.0};
+        for (int i = 0; i < secondInputVector.size(); i++) {
+            secondInputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getValue()[i]);
+            secondInputColor[i] = dataset.get(CurrentStep%dataset.size()).getValue()[i];
+        }
+
+        locator.getCanvasPaneController().setFirstInputColor(firstInputColor);
+        locator.getCanvasPaneController().setSecondInputColor(secondInputColor);
         locator.getCanvasPaneController().highlightInputs(firstInputVector);
         locator.getCanvasPaneController().highlightInputs(secondInputVector);
     }
@@ -87,28 +80,34 @@ public class FullCPModel extends CPModel{
         locator.getCanvasPaneController().removeHighlightInputs(secondInputVector);
 
         HiddenLayerNeuron closestNeuron = getHLNeuronWithClosestWeightVectors();
-        winnerHLNeuron = closestNeuron;
-        winnerHLNeuron.setOutput(1);
+        victoriousHLNeuron = closestNeuron;
+        victoriousHLNeuron.setOutput(1);
         locator.getCanvasPaneController().highlightWinnerNeuron(closestNeuron);
+
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.showValue(locator);
+        }
     }
 
     @Override
     protected void updateHiddenLayerWeights() {
-        updateNeuronWeights(winnerHLNeuron);
-        locator.getCanvasPaneController().highlightWeightsOfSingleNeuron(winnerHLNeuron);
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.hideValue(locator);
+        }
+
+        updateNeuronWeights(victoriousHLNeuron);
+        locator.getCanvasPaneController().highlightWeightsOfSingleNeuron(victoriousHLNeuron);
     }
 
     @Override
     protected void initializePhaseTwo() {
         //remove highlight of neuron in case of the end of a learning loop
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
-        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(winnerHLNeuron);
-        if(winnerHLNeuron != null){
-            winnerHLNeuron.setOutput(0);
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
+        if(victoriousHLNeuron != null){
+            victoriousHLNeuron.setOutput(0);
         }
-        winnerHLNeuron = null;
-
-        locator.getLeftMenuController().showMessage("phase two", "", null);
+        victoriousHLNeuron = null;
     }
 
     @Override
@@ -126,22 +125,29 @@ public class FullCPModel extends CPModel{
 
     @Override
     protected void attachInputVectorsPhaseTwo() {
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
-        if(winnerHLNeuron != null){
-            winnerHLNeuron.setOutput(0);
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+        if(victoriousHLNeuron != null){
+            victoriousHLNeuron.setOutput(0);
         }
-        winnerHLNeuron = null;
+        victoriousHLNeuron = null;
         locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(firstOutputLayerNeurons);
         locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(secondOutputLayerNeurons);
         locator.getCanvasPaneController().removeHighlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
 
+        Double[] firstInputColor = {0.0,0.0,0.0};
         for (int i = 0; i < firstInputVector.size(); i++) {
             firstInputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getKey()[i]);
-        }
-        for (int i = 0; i < secondInputVector.size(); i++) {
-            secondInputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getValue()[i]);
+            firstInputColor[i] = dataset.get(CurrentStep%dataset.size()).getKey()[i];
         }
 
+        Double[] secondInputColor = {0.0,0.0,0.0};
+        for (int i = 0; i < secondInputVector.size(); i++) {
+            secondInputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getValue()[i]);
+            secondInputColor[i] = dataset.get(CurrentStep%dataset.size()).getValue()[i];
+        }
+
+        locator.getCanvasPaneController().setFirstInputColor(firstInputColor);
+        locator.getCanvasPaneController().setSecondInputColor(secondInputColor);
         locator.getCanvasPaneController().highlightInputs(firstInputVector);
         locator.getCanvasPaneController().highlightInputs(secondInputVector);
     }
@@ -152,8 +158,8 @@ public class FullCPModel extends CPModel{
         locator.getCanvasPaneController().removeHighlightInputs(secondInputVector);
 
         HiddenLayerNeuron closestNeuron = getHLNeuronWithClosestWeightVectors();
-        winnerHLNeuron = closestNeuron;
-        winnerHLNeuron.setOutput(1);
+        victoriousHLNeuron = closestNeuron;
+        victoriousHLNeuron.setOutput(1);
         locator.getCanvasPaneController().highlightWinnerNeuron(closestNeuron);
     }
 
@@ -181,7 +187,9 @@ public class FullCPModel extends CPModel{
 
     @Override
     protected void cleanAfterLastOutputLayerUpdate() {
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
+        locator.getBottomBarController().cleanStatusBar();
+
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
         locator.getCanvasPaneController().removeHighlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
     }
 
@@ -255,7 +263,7 @@ public class FullCPModel extends CPModel{
     private ArrayList<Line> getConnectionsFromOutputToWinnerNeuron(){
         int winnerNeuron = 0;
         for (int i = 0; i < hiddenLayerNeurons.size(); i++) {
-            if(hiddenLayerNeurons.get(i) == winnerHLNeuron){
+            if(hiddenLayerNeurons.get(i) == victoriousHLNeuron){
                 winnerNeuron = i;
             }
         }
@@ -273,7 +281,7 @@ public class FullCPModel extends CPModel{
 
     private int getWinnerNeuronIndex() {
         for (int i = 0; i < hiddenLayerNeurons.size(); i++) {
-            if(hiddenLayerNeurons.get(i) == winnerHLNeuron){
+            if(hiddenLayerNeurons.get(i) == victoriousHLNeuron){
                 return i;
             }
         }

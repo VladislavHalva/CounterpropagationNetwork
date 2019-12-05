@@ -57,8 +57,7 @@ public class OutputLayerNeuron extends Neuron {
         return weightLines;
     }
 
-    public Line getConnectionToNthHiddenNeuron(int neuronIndex){
-        return weightLines.get(neuronIndex);
+    public ArrayList<Double> getWeights(){
+        return weights;
     }
-
 }

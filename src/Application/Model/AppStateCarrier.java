@@ -50,6 +50,7 @@ public class AppStateCarrier {
             AppState = AppStates.READY;
             this.ChosenCPType = CPType.FULL;
             this.RunningCP = null;
+            locator.getBottomBarController().cleanStatusBar();
             locator.getCanvasPaneController().cleanCanvas();
             switchButtonActivityAccordingToState(AppStates.READY);
         }

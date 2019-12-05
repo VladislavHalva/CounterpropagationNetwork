@@ -160,6 +160,7 @@ public class LeftMenuController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
                 locator.getAppStateCarrier().learningInterrupted();
+                chosenCPType = CPType.FULL;
             }
         });
     }
@@ -216,7 +217,7 @@ public class LeftMenuController implements Initializable {
         InitializeButton.setDisable(newState != AppStates.READY);
         StepButton.setDisable(newState != AppStates.LEARNING_RUNNING);
         RunButton.setDisable(newState != AppStates.LEARNING_RUNNING);
-        StopButton.setDisable(newState != AppStates.LEARNING_RUNNING);
+        StopButton.setDisable(newState != AppStates.LEARNING_RUNNING && newState != AppStates.LEARNED);
         ToOutLayerLearningButton.setDisable(newState != AppStates.LEARNING_RUNNING);
         RunRecognitionButton.setDisable(newState != AppStates.LEARNED);
         ForwardCPButton.setDisable(newState != AppStates.READY);

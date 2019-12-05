@@ -1,5 +1,6 @@
 package Application.Controller;
 
+import Application.Enums.CPType;
 import Application.Model.HiddenLayerNeuron;
 import Application.Model.InputPoint;
 import Application.Model.Neuron;
@@ -11,9 +12,11 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.net.URL;
@@ -26,8 +29,15 @@ public class CanvasPaneController implements Initializable {
     @FXML
     AnchorPane CanvasPane;
 
+    Rectangle FirstInputColorPreview = new Rectangle(150,12,new Color(1,1,1,1));
+    Rectangle SecondInputColorPreview = new Rectangle(150,12,new Color(1,1,1,1));
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        FirstInputColorPreview.setStroke(new Color(0,0,0,1));
+        FirstInputColorPreview.setStrokeWidth(1);
+        SecondInputColorPreview.setStroke(new Color(0,0,0,1));
+        SecondInputColorPreview.setStrokeWidth(1);
     }
 
 
@@ -73,6 +83,8 @@ public class CanvasPaneController implements Initializable {
             hiddenLayerNeurons.get(i).setCenterX(80+i*90);
             hiddenLayerNeurons.get(i).setCenterY(240);
             hiddenLayerNeurons.get(i).setRadius(20);
+            hiddenLayerNeurons.get(i).setStroke(new Color(0,0,0,1));
+            hiddenLayerNeurons.get(i).setStrokeWidth(1);
 
             CanvasPane.getChildren().addAll(hiddenLayerNeurons.get(i).getConnections());
         }
@@ -92,6 +104,24 @@ public class CanvasPaneController implements Initializable {
 
             CanvasPane.getChildren().addAll(secondOutputLayerNeurons.get(i).getConnections());
         }
+
+        //set input color preview rectangle
+        FirstInputColorPreview.setX(33);
+        FirstInputColorPreview.setY(35);
+        SecondInputColorPreview.setX(33);
+        SecondInputColorPreview.setY(437);
+        CanvasPane.getChildren().add(FirstInputColorPreview);
+        CanvasPane.getChildren().addAll(SecondInputColorPreview);
+
+        Label input1Label = new Label("First input color");
+        input1Label.setLayoutX(37);
+        input1Label.setLayoutY(32);
+        CanvasPane.getChildren().add(input1Label);
+
+        Label input2Label = new Label("Second input color");
+        input2Label.setLayoutX(37);
+        input2Label.setLayoutY(434);
+        CanvasPane.getChildren().add(input2Label);
 
         CanvasPane.getChildren().addAll(firstInputVector);
         CanvasPane.getChildren().addAll(secondInputVector);
@@ -130,6 +160,8 @@ public class CanvasPaneController implements Initializable {
             hiddenLayerNeurons.get(i).setCenterX(180+i*90);
             hiddenLayerNeurons.get(i).setCenterY(240);
             hiddenLayerNeurons.get(i).setRadius(20);
+            hiddenLayerNeurons.get(i).setStroke(new Color(0,0,0,1));
+            hiddenLayerNeurons.get(i).setStrokeWidth(1);
 
             CanvasPane.getChildren().addAll(hiddenLayerNeurons.get(i).getConnections());
         }
@@ -142,6 +174,16 @@ public class CanvasPaneController implements Initializable {
 
             CanvasPane.getChildren().addAll(outputLayerNeurons.get(i).getConnections());
         }
+
+        //input color rectangle preview
+        FirstInputColorPreview.setX(323);
+        FirstInputColorPreview.setY(440);
+        CanvasPane.getChildren().add(FirstInputColorPreview);
+
+        Label input1Label = new Label("Input color");
+        input1Label.setLayoutX(330);
+        input1Label.setLayoutY(437);
+        CanvasPane.getChildren().add(input1Label);
 
         CanvasPane.getChildren().addAll(inputVector);
         CanvasPane.getChildren().addAll(hiddenLayerNeurons);
@@ -239,5 +281,46 @@ public class CanvasPaneController implements Initializable {
 
     public AnchorPane getCanvasPane(){
         return CanvasPane;
+    }
+
+    public void setFirstInputColor(Double color[]){
+        FirstInputColorPreview.setFill(new Color(color[0], color[1], color[2], 1));
+    }
+
+    public void setSecondInputColor(Double[] color){
+        SecondInputColorPreview.setFill(new Color(color[0], color[1], color[2], 1));
+    }
+
+    public void showOutputNeuronsColor(ArrayList<OutputLayerNeuron> firstOutput,
+                                       ArrayList<OutputLayerNeuron> secondOutput, int victoriousNeuronIndex, CPType cpType){
+        Double[] firstColor = {0.0,0.0,0.0};
+        Double[] secondColor = {0.0,0.0,0.0};
+
+        if(cpType == CPType.FORWARD_ONLY){
+            for (int i = 0; i < firstOutput.size(); i++) {
+                firstColor[i] = firstOutput.get(i).getWeights().get(victoriousNeuronIndex);
+            }
+            for (OutputLayerNeuron neuron : firstOutput){
+                neuron.setFill(new Color(firstColor[0], firstColor[1], firstColor[2],1));
+            }
+        }
+        else{
+            for (int i = 0; i < firstOutput.size(); i++) {
+                firstColor[i] = firstOutput.get(i).getWeights().get(victoriousNeuronIndex);
+            }
+            for (int i = 0; i < secondOutput.size(); i++) {
+                secondColor[i] = secondOutput.get(i).getWeights().get(victoriousNeuronIndex);
+            }
+            for (OutputLayerNeuron neuron : firstOutput){
+                neuron.setFill(new Color(firstColor[0], firstColor[1], firstColor[2],1));
+            }
+            for (OutputLayerNeuron neuron : secondOutput){
+                neuron.setFill(new Color(secondColor[0], secondColor[1], secondColor[2],1));
+            }
+        }
+    }
+
+    public void hideOutputNeuronsColor(ArrayList<OutputLayerNeuron> firstOutput, ArrayList<OutputLayerNeuron> secondOutput){
+        //TODO first
     }
 }

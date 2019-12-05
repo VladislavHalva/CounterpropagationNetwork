@@ -13,8 +13,6 @@ public class ForwardOnlyCPModel extends CPModel {
     private ArrayList<OutputLayerNeuron> outputLayerNeurons = new ArrayList<>();
     private ArrayList<InputPoint> inputVector = new ArrayList<>();
 
-
-
     /**
      * Ctor
      * @param steps
@@ -35,17 +33,6 @@ public class ForwardOnlyCPModel extends CPModel {
     }
 
     @Override
-    public void run() {
-
-    }
-
-    @Override
-    public void jumpToOutputLayerLearning() {
-
-    }
-
-
-    @Override
     protected void generateHiddenLayerWeights() {
         for(HiddenLayerNeuron hiddenLayerNeuron : hiddenLayerNeurons){
             hiddenLayerNeuron.generateRandomWeights();
@@ -58,18 +45,21 @@ public class ForwardOnlyCPModel extends CPModel {
         //remove highlight after generating weights
         locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(hiddenLayerNeurons);
         //remove highlight of neuron in case of learning loop
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
-        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(winnerHLNeuron);
-        if(winnerHLNeuron != null){
-            winnerHLNeuron.setOutput(0);
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
+        if(victoriousHLNeuron != null){
+            victoriousHLNeuron.setOutput(0);
         }
-        winnerHLNeuron = null;
+        victoriousHLNeuron = null;
 
+        Double[] inputColor = {0.0,0.0,0.0};
         //attach the input vector
         for (int i = 0; i < inputVector.size(); i++) {
             inputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getKey()[i]);
+            inputColor[i] = dataset.get(CurrentStep%dataset.size()).getKey()[i];
         }
 
+        locator.getCanvasPaneController().setFirstInputColor(inputColor);
         locator.getCanvasPaneController().highlightInputs(inputVector);
     }
 
@@ -79,8 +69,8 @@ public class ForwardOnlyCPModel extends CPModel {
         locator.getCanvasPaneController().removeHighlightInputs(inputVector);
 
         HiddenLayerNeuron closestNeuron = getHLNeuronWithClosestWeightsVector();
-        winnerHLNeuron = closestNeuron;
-        winnerHLNeuron.setOutput(1.0);
+        victoriousHLNeuron = closestNeuron;
+        victoriousHLNeuron.setOutput(1.0);
         locator.getCanvasPaneController().highlightWinnerNeuron(closestNeuron);
         for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
             neuron.showValue(locator);
@@ -93,21 +83,19 @@ public class ForwardOnlyCPModel extends CPModel {
             neuron.hideValue(locator);
         }
 
-        updateNeuronWeights(winnerHLNeuron);
-        locator.getCanvasPaneController().highlightWeightsOfSingleNeuron(winnerHLNeuron);
+        updateNeuronWeights(victoriousHLNeuron);
+        locator.getCanvasPaneController().highlightWeightsOfSingleNeuron(victoriousHLNeuron);
     }
 
     @Override
     protected void initializePhaseTwo() {
         //remove highlight of neuron in case of the end of a learning loop
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
-        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(winnerHLNeuron);
-        if(winnerHLNeuron != null){
-            winnerHLNeuron.setOutput(0);
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+        locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
+        if(victoriousHLNeuron != null){
+            victoriousHLNeuron.setOutput(0);
         }
-        winnerHLNeuron = null;
-
-        locator.getLeftMenuController().showMessage("phase two", "", null);
+        victoriousHLNeuron = null;
     }
 
     @Override
@@ -120,19 +108,21 @@ public class ForwardOnlyCPModel extends CPModel {
 
     @Override
     protected void attachInputVectorsPhaseTwo() {
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
-        if(winnerHLNeuron != null){
-            winnerHLNeuron.setOutput(0);
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+        if(victoriousHLNeuron != null){
+            victoriousHLNeuron.setOutput(0);
         }
-        winnerHLNeuron = null;
+        victoriousHLNeuron = null;
         locator.getCanvasPaneController().removeHighlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
         locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(outputLayerNeurons);
 
+        Double[] inputColor = {0.0,0.0,0.0};
         //attach the input vector
         for (int i = 0; i < inputVector.size(); i++) {
             inputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getKey()[i]);
+            inputColor[i] = dataset.get(CurrentStep%dataset.size()).getKey()[i];
         }
-
+        locator.getCanvasPaneController().setFirstInputColor(inputColor);
         locator.getCanvasPaneController().highlightInputs(inputVector);
     }
 
@@ -142,8 +132,8 @@ public class ForwardOnlyCPModel extends CPModel {
         locator.getCanvasPaneController().removeHighlightInputs(inputVector);
 
         HiddenLayerNeuron closestNeuron = getHLNeuronWithClosestWeightsVector();
-        winnerHLNeuron = closestNeuron;
-        winnerHLNeuron.setOutput(1);
+        victoriousHLNeuron = closestNeuron;
+        victoriousHLNeuron.setOutput(1);
         locator.getCanvasPaneController().highlightWinnerNeuron(closestNeuron);
     }
 
@@ -168,7 +158,9 @@ public class ForwardOnlyCPModel extends CPModel {
 
     @Override
     protected void cleanAfterLastOutputLayerUpdate() {
-        locator.getCanvasPaneController().removeHighlightWinnerNeuron(winnerHLNeuron);
+        locator.getBottomBarController().cleanStatusBar();
+
+        locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
         locator.getCanvasPaneController().removeHighlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
     }
 
@@ -222,7 +214,7 @@ public class ForwardOnlyCPModel extends CPModel {
     private ArrayList<Line> getConnectionsFromOutputToWinnerNeuron(){
         int winnerNeuron = 0;
         for (int i = 0; i < hiddenLayerNeurons.size(); i++) {
-            if(hiddenLayerNeurons.get(i) == winnerHLNeuron){
+            if(hiddenLayerNeurons.get(i) == victoriousHLNeuron){
                 winnerNeuron = i;
             }
         }
@@ -237,7 +229,7 @@ public class ForwardOnlyCPModel extends CPModel {
 
     private int getWinnerNeuronIndex() {
         for (int i = 0; i < hiddenLayerNeurons.size(); i++) {
-            if(hiddenLayerNeurons.get(i) == winnerHLNeuron){
+            if(hiddenLayerNeurons.get(i) == victoriousHLNeuron){
                 return i;
             }
         }

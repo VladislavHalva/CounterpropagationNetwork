@@ -236,4 +236,8 @@ public class CanvasPaneController implements Initializable {
             connection.setStrokeWidth(1);
         }
     }
+
+    public AnchorPane getCanvasPane(){
+        return CanvasPane;
+    }
 }

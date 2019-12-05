@@ -67,7 +67,7 @@ public class ForwardOnlyCPModel extends CPModel {
 
         //attach the input vector
         for (int i = 0; i < inputVector.size(); i++) {
-            inputVector.get(i).setValue(dataset.get(CurrentStep).getKey()[i]);
+            inputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getKey()[i]);
         }
 
         locator.getCanvasPaneController().highlightInputs(inputVector);
@@ -80,12 +80,19 @@ public class ForwardOnlyCPModel extends CPModel {
 
         HiddenLayerNeuron closestNeuron = getHLNeuronWithClosestWeightsVector();
         winnerHLNeuron = closestNeuron;
-        winnerHLNeuron.setOutput(1);
+        winnerHLNeuron.setOutput(1.0);
         locator.getCanvasPaneController().highlightWinnerNeuron(closestNeuron);
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.showValue(locator);
+        }
     }
 
     @Override
     protected void updateHiddenLayerWeights() {
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.hideValue(locator);
+        }
+
         updateNeuronWeights(winnerHLNeuron);
         locator.getCanvasPaneController().highlightWeightsOfSingleNeuron(winnerHLNeuron);
     }
@@ -123,7 +130,7 @@ public class ForwardOnlyCPModel extends CPModel {
 
         //attach the input vector
         for (int i = 0; i < inputVector.size(); i++) {
-            inputVector.get(i).setValue(dataset.get(CurrentStep).getKey()[i]);
+            inputVector.get(i).setValue(dataset.get(CurrentStep%dataset.size()).getKey()[i]);
         }
 
         locator.getCanvasPaneController().highlightInputs(inputVector);
@@ -142,6 +149,20 @@ public class ForwardOnlyCPModel extends CPModel {
 
     @Override
     protected void updateOutputLayerWeights() {
+        var winnerNeuronIndex = getWinnerNeuronIndex();
+
+        for (OutputLayerNeuron neuron : outputLayerNeurons){
+            System.out.println(neuron.weights.get(winnerNeuronIndex));
+        }
+
+        for (int outputNIndex = 0; outputNIndex < outputLayerNeurons.size(); outputNIndex++) {
+            //v(k) = v(k-1) + mu*(d - v(k-1))
+            outputLayerNeurons.get(outputNIndex).weights.set(winnerNeuronIndex,
+                    outputLayerNeurons.get(outputNIndex).weights.get(winnerNeuronIndex) +
+                    LearningCoeff*(dataset.get(CurrentStep%dataset.size()).getValue()[outputNIndex] -
+                            outputLayerNeurons.get(outputNIndex).weights.get(winnerNeuronIndex)));
+        }
+
         locator.getCanvasPaneController().highlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
     }
 
@@ -212,5 +233,14 @@ public class ForwardOnlyCPModel extends CPModel {
         }
 
         return connections;
+    }
+
+    private int getWinnerNeuronIndex() {
+        for (int i = 0; i < hiddenLayerNeurons.size(); i++) {
+            if(hiddenLayerNeurons.get(i) == winnerHLNeuron){
+                return i;
+            }
+        }
+        return 0;
     }
 }

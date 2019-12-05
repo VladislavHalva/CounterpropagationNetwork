@@ -49,7 +49,7 @@ public abstract class CPModel {
                 break;
             case UPDATING_HIDDEN_LAYER_WEIGHTS:
                 updateHiddenLayerWeights();
-                if(CurrentStep < Steps) {
+                if(CurrentStep < Steps*dataset.size()) {
                     LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_ONE;
                     CurrentStep++;
                 }else{
@@ -75,7 +75,7 @@ public abstract class CPModel {
                 break;
             case UPDATING_OUTER_LAYER_WEIGHTS:
                 updateOutputLayerWeights();
-                if(CurrentStep < Steps) {
+                if(CurrentStep < Steps*dataset.size()) {
                     LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_TWO;
                     CurrentStep++;
                 }else{

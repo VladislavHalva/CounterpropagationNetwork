@@ -133,8 +133,7 @@ public class HiddenLayerNeuron extends Neuron {
 
     @Override
     public void setOutput(double output){
-        if(output > 0){
-            Output = 1;
-        }
+            Output = output;
+            OutputLabel.setText(String.format("%.0f", Output));
     }
 }

@@ -21,7 +21,7 @@ public class OutputLayerNeuron extends Neuron {
      *
      */
     private void initWeightsVector() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             weights.add(0.0);
         }
     }
@@ -33,8 +33,8 @@ public class OutputLayerNeuron extends Neuron {
     public void generateRandomWeights(){
         Random rd = new Random();
 
-        for(Double weight : weights){
-            weight = rd.nextDouble();
+        for (int i = 0; i < weights.size(); i++) {
+            weights.set(i, rd.nextDouble());
         }
     }
 

@@ -1,5 +1,6 @@
 package Application.Model;
 
+import Application.Enums.CPType;
 import javafx.scene.shape.Line;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ public class OutputLayerNeuron extends Neuron {
     ArrayList<Double> weights = new ArrayList<>();
     ArrayList<Line> weightLines = new ArrayList<>();
 
-    public OutputLayerNeuron(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons){
-        super();
+    public OutputLayerNeuron(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons, CPType cpType){
+        super(cpType);
         createConnectionToHiddenLayer(hiddenLayerNeurons);
         initWeightsVector();
     }
@@ -28,6 +29,7 @@ public class OutputLayerNeuron extends Neuron {
     /**
      *
      */
+    @Override
     public void generateRandomWeights(){
         Random rd = new Random();
 
@@ -54,4 +56,9 @@ public class OutputLayerNeuron extends Neuron {
     public ArrayList<Line> getConnections(){
         return weightLines;
     }
+
+    public Line getConnectionToNthHiddenNeuron(int neuronIndex){
+        return weightLines.get(neuronIndex);
+    }
+
 }

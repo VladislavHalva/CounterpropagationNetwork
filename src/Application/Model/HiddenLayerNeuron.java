@@ -1,5 +1,7 @@
 package Application.Model;
 
+import Application.Enums.CPType;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 
@@ -18,8 +20,8 @@ public class HiddenLayerNeuron extends Neuron {
      * Forward only ctor
      * @param firstInputVector
      */
-    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector){
-        super();
+    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, CPType cpType){
+        super(cpType);
         createConnectionToInput(firstInputVector);
         initWeightsVectors();
     }
@@ -29,8 +31,8 @@ public class HiddenLayerNeuron extends Neuron {
      * @param firstInputVector
      * @param secondInputVector
      */
-    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, ArrayList<InputPoint> secondInputVector){
-        super();
+    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, ArrayList<InputPoint> secondInputVector, CPType cpType){
+        super(cpType);
         createConnectionsToInputs(firstInputVector, secondInputVector);
         initWeightsVectors();
     }
@@ -48,7 +50,8 @@ public class HiddenLayerNeuron extends Neuron {
     /**
      *
      */
-    public void generateRandomWeightsFull(){
+    @Override
+    public void generateRandomWeights(){
         Random rd = new Random();
 
         for (int i = 0; i < weightsFirst.size(); i++) {
@@ -57,16 +60,19 @@ public class HiddenLayerNeuron extends Neuron {
         for (int i = 0; i < weightsSecond.size(); i++) {
             weightsSecond.set(i, rd.nextDouble());
         }
-    }
 
-    /**
-     *
-     */
-    public void generateRandomWeightsForward(){
-        Random rd = new Random();
-
-        for (int i = 0; i < weightsFirst.size(); i++) {
-            weightsFirst.set(i, rd.nextDouble());
+        if(cpType == CPType.FULL){
+            this.setStyle("-fx-fill:linear-gradient( from 100.0% 100.0% to 100.0% 0.0%, rgb("+
+                    (weightsSecond.get(0)*255)+","
+                    +(weightsSecond.get(1)*255)+","
+                    +(weightsSecond.get(2)*255)+
+                    ") 0.5,rgb("
+                    +(weightsFirst.get(0)*255)+","
+                    +(weightsFirst.get(1)*255)+","
+                    +(weightsFirst.get(2)*255)+") 0.5);");
+        }else{
+            //FORWARD ONLY
+            this.setFill(new Color(weightsFirst.get(0), weightsFirst.get(1), weightsFirst.get(2),1));
         }
     }
 
@@ -107,5 +113,28 @@ public class HiddenLayerNeuron extends Neuron {
         connections.addAll(firstWeightLines);
         connections.addAll(secondWeightLines);
         return connections;
+    }
+
+    public void updateNeuronColorAccordingToWeights(){
+        if(cpType == CPType.FULL){
+            this.setStyle("-fx-fill:linear-gradient( from 100.0% 100.0% to 100.0% 0.0%, rgb("+
+                    (weightsSecond.get(0)*255)+","
+                    +(weightsSecond.get(1)*255)+","
+                    +(weightsSecond.get(2)*255)+
+                    ") 0.5,rgb("
+                    +(weightsFirst.get(0)*255)+","
+                    +(weightsFirst.get(1)*255)+","
+                    +(weightsFirst.get(2)*255)+") 0.5);");
+        }else{
+            //FORWARD ONLY
+            this.setFill(new Color(weightsFirst.get(0), weightsFirst.get(1), weightsFirst.get(2),1));
+        }
+    };
+
+    @Override
+    public void setOutput(double output){
+        if(output > 0){
+            Output = 1;
+        }
     }
 }

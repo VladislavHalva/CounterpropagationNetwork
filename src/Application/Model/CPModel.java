@@ -14,6 +14,7 @@ public abstract class CPModel {
     protected int Steps;
     protected double LearningCoeff;
     protected ArrayList<Pair<double[], double[]>> dataset = null;
+    protected HiddenLayerNeuron winnerHLNeuron = null;
 
     protected int CurrentStep = 1;
     protected LearningStates LearningState = LearningStates.INITIALIZED;
@@ -29,7 +30,7 @@ public abstract class CPModel {
     public abstract void loadNetworkToCanvas();
 
     public void makeStep(){
-        System.out.println("FROM: " + LearningState.toString());
+        //System.out.println("FROM: " + LearningState.toString());
         switch (LearningState){
             case INITIALIZED:
                 LearningState = LearningStates.HIDDEN_LAYER_WEIGHTS_GENERATE;
@@ -76,13 +77,17 @@ public abstract class CPModel {
                 updateOutputLayerWeights();
                 if(CurrentStep < Steps) {
                     LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_TWO;
+                    CurrentStep++;
                 }else{
+                    cleanAfterLastOutputLayerUpdate();
                     locator.getAppStateCarrier().learningSuccesfullyFinished();
                 }
                 break;
         }
-        System.out.println("TO: " + LearningState.toString());
+        //System.out.println("TO: " + LearningState.toString());
     }
+
+    protected abstract void cleanAfterLastOutputLayerUpdate();
 
     protected abstract void updateOutputLayerWeights();
 

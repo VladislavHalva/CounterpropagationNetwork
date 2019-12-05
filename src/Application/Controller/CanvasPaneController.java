@@ -17,10 +17,7 @@ import javafx.scene.shape.Line;
 import javafx.util.Duration;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 public class CanvasPaneController implements Initializable {
 
@@ -155,44 +152,24 @@ public class CanvasPaneController implements Initializable {
      *
      * @param neurons
      */
-    public void visualizeWeightsGenerating(ArrayList<HiddenLayerNeuron> neurons){
-        Neuron neuron = neurons.get(0);
-
-        //highlight first neuron
-        ArrayList<Line> connections = neuron.getConnections();
-        for(Line connection : connections) {
-            connection.setStroke(new Color(0.0, 1.0, 0.0, 1.0));
-            connection.setStrokeWidth(3);
+    public void hightlightConnectionsOfGivenNeurons(ArrayList<? extends Neuron> neurons){
+        for(Neuron neuron : neurons){
+            for(Line connection : neuron.getConnections()){
+                connection.setStroke(new Color(0.0, 1.0, 0.0, 1.0));
+                connection.setStrokeWidth(3);
+            }
         }
+    }
 
-        //highlight one neuron each second
-        Timeline tl = new Timeline(new KeyFrame(Duration.seconds(0.5), new EventHandler<ActionEvent>() {
-            private int i = 0;
-
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                //remove highlight from i neuron
-                Neuron neuron1 = neurons.get(i);
-                ArrayList<Line> connections1 = neuron1.getConnections();
-                for(Line connection : connections1) {
+    public void removeHightlightConnectionsOfGivenNeurons(ArrayList<? extends Neuron> neurons){
+        if(neurons != null) {
+            for (Neuron neuron : neurons) {
+                for (Line connection : neuron.getConnections()) {
                     connection.setStroke(new Color(0.0, 0.0, 0.0, 1.0));
                     connection.setStrokeWidth(1);
                 }
-
-                //add highlight to i + 1 neuron
-                if((i+1) < neurons.size()) {
-                    Neuron neuron2 = neurons.get(i+1);
-                    ArrayList<Line> connections2 = neuron2.getConnections();
-                    for (Line connection : connections2) {
-                        connection.setStroke(new Color(0.0, 1.0, 0.0, 1.0));
-                        connection.setStrokeWidth(3);
-                    }
-                }
-                i++;
             }
-        }));
-        tl.setCycleCount(neurons.size());
-        tl.play();
+        }
     }
 
     public void cleanCanvas(){
@@ -203,18 +180,60 @@ public class CanvasPaneController implements Initializable {
         this.locator = locator;
     }
 
-    public void highlightWinnerNeuron(HiddenLayerNeuron closestNeuron) {
-        closestNeuron.setFill(new Color(0,1,0,1));
-        //TODO write weights
+    public void highlightWinnerNeuron(HiddenLayerNeuron neuron) {
+        neuron.setStroke(new Color(0,1,0,1));
+        neuron.setStrokeWidth(3);
+    }
 
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                Platform.runLater(() -> {
-                    closestNeuron.setFill(new Color(0,0,0,1));
-                });
+    public void removeHighlightWinnerNeuron(HiddenLayerNeuron neuron){
+        if(neuron != null) {
+            neuron.setStroke(new Color(0,0,0,1));
+            neuron.setStrokeWidth(0);
+        }
+        neuron = null;
+    }
+
+    public void highlightWeightsOfSingleNeuron(HiddenLayerNeuron winnerHLNeuron) {
+        for(Line connection : winnerHLNeuron.getConnections()){
+            connection.setStroke(new Color(0.0, 1.0, 0.0, 1.0));
+            connection.setStrokeWidth(3);
+        }
+    }
+
+    public void removeHighlightWeightsOfSingleNeuron(HiddenLayerNeuron winnerHLNeuron) {
+        if(winnerHLNeuron != null) {
+            for (Line connection : winnerHLNeuron.getConnections()) {
+                connection.setStroke(new Color(0.0, 0.0, 0.0, 1.0));
+                connection.setStrokeWidth(1);
             }
-        }, 4000);
+        }
+    }
+
+    public void highlightInputs(ArrayList<InputPoint> inputVector) {
+        for(InputPoint inputPoint : inputVector){
+            inputPoint.setFill(new Color(0,1,0,1));
+            inputPoint.getValueLabel().setFill(new Color(0,1,0,1));
+        }
+    }
+
+    public void removeHighlightInputs(ArrayList<InputPoint> inputVector) {
+        for(InputPoint inputPoint : inputVector){
+            inputPoint.setFill(new Color(0,0,0,1));
+            inputPoint.getValueLabel().setFill(new Color(0,0,0,1));
+        }
+    }
+
+    public void highlightOutputsConnectionsToWinner(ArrayList<Line> connections) {
+        for(Line connection : connections){
+            connection.setStroke(new Color(0,1,0,1));
+            connection.setStrokeWidth(3);
+        }
+    }
+
+    public void removeHighlightOutputsConnectionsToWinner(ArrayList<Line> connections) {
+        for(Line connection : connections){
+            connection.setStroke(new Color(0,0,0,1));
+            connection.setStrokeWidth(1);
+        }
     }
 }

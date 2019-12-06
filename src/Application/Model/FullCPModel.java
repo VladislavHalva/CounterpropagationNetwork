@@ -166,7 +166,7 @@ public class FullCPModel extends CPModel{
 
     @Override
     protected void updateOutputLayerWeights() {
-        var victoriousNeuronIndex = getVictoriousNeuronIndex();
+        int victoriousNeuronIndex = getVictoriousNeuronIndex();
 
         for (int outputNIndex = 0; outputNIndex < firstOutputLayerNeurons.size(); outputNIndex++) {
             //v(k) = v(k-1) + mu*(d - v(k-1))

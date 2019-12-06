@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="CPNdemonstration:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/CPNdemonstration_jar</output-path>
+    <root id="archive" name="CPNdemonstration.jar">
+      <element id="module-output" name="CPNdemonstration" />
+    </root>
+  </artifact>
+</component>

@@ -109,7 +109,7 @@ public class HiddenLayerNeuron extends Neuron {
 
     @Override
     public ArrayList<Line> getConnections(){
-        var connections = new ArrayList<Line>();
+        ArrayList<Line> connections = new ArrayList<>();
         connections.addAll(firstWeightLines);
         connections.addAll(secondWeightLines);
         return connections;

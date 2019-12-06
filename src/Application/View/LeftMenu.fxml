@@ -10,7 +10,13 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="1000" prefWidth="250" style="-fx-background-color: aliceblue" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Application.Controller.LeftMenuController">
+<AnchorPane prefHeight="1000" prefWidth="250"
+            style="-fx-background-color: aliceblue"
+            AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
+            AnchorPane.topAnchor="0.0"
+            xmlns="http://javafx.com/javafx/8.0.231"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="Application.Controller.LeftMenuController">
    <children>
       <Button fx:id="ForwardCPButton" layoutY="2.0" mnemonicParsing="false" prefWidth="125.0" text="Forward Only" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0" />
       <Button fx:id="FullCPButton" disable="true" layoutX="198.0" layoutY="2.0" mnemonicParsing="false" prefWidth="125.0" text="Full" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />

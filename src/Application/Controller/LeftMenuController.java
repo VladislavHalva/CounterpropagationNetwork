@@ -257,11 +257,11 @@ public class LeftMenuController implements Initializable {
 
     public void showMessage(String title, String text, Paint textColor){
         //create message from arguments
-        var titleLabel = new Label(title);
+        Label titleLabel = new Label(title);
         titleLabel.setWrapText(true);
         titleLabel.setStyle("-fx-font-weight: bold;");
 
-        var textLabel = new Label(text);
+        Label textLabel = new Label(text);
         textLabel.setWrapText(true);
 
         if(textColor != null){

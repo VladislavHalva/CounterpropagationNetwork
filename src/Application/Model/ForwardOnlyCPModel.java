@@ -140,7 +140,7 @@ public class ForwardOnlyCPModel extends CPModel {
 
     @Override
     protected void updateOutputLayerWeights() {
-        var victoriousNeuronIndex = getVictoriousNeuronIndex();
+        int victoriousNeuronIndex = getVictoriousNeuronIndex();
 
         for (OutputLayerNeuron neuron : outputLayerNeurons){
         }

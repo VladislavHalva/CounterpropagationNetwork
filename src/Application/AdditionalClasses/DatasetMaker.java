@@ -8,7 +8,7 @@ import java.util.Random;
 public class DatasetMaker {
 
     public static ArrayList<Pair<double[], double[]>> createDataset(int size){
-        var dataset = new ArrayList<Pair<double[], double[]>>();
+        ArrayList<Pair<double[], double[]>> dataset = new ArrayList<>();
 
         for (int i = 0; i < size; i++) {
             double[] rgb = {0.0,0.0,0.0};

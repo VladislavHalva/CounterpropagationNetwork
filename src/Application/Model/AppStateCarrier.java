@@ -46,14 +46,12 @@ public class AppStateCarrier {
     }
 
     public void learningInterrupted(){
-        if(AppState == AppStates.LEARNING_RUNNING){
             AppState = AppStates.READY;
             this.ChosenCPType = CPType.FULL;
             this.RunningCP = null;
             locator.getBottomBarController().cleanStatusBar();
             locator.getCanvasPaneController().cleanCanvas();
             switchButtonActivityAccordingToState(AppStates.READY);
-        }
     }
 
     public void makeLearningStep(){

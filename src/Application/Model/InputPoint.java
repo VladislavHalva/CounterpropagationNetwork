@@ -10,7 +10,6 @@ public class InputPoint extends Circle {
 
     private double Value = 0.0;
     private Text ValueLabel;
-    private Rectangle ColorPreview;
 
     public InputPoint(){
         super();

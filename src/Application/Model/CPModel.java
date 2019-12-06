@@ -36,7 +36,8 @@ public abstract class CPModel {
     public void makeStep(){
         switch (LearningState){
             case INITIALIZED:
-                locator.getBottomBarController().addMessageToStatusBar("Learning initialized - hidden layer neurons learning");
+                locator.getBottomBarController().addMessageToStatusBar("Learning initialized - hidden layer neurons learning" +
+                        "\n Hidden layer neurons colors represent their weights values in relevant color model.");
                 LearningState = LearningStates.HIDDEN_LAYER_WEIGHTS_GENERATE;
                 break;
             case HIDDEN_LAYER_WEIGHTS_GENERATE:
@@ -50,7 +51,8 @@ public abstract class CPModel {
                 LearningState = LearningStates.COMPETITION_PHASE_ONE;
                 break;
             case COMPETITION_PHASE_ONE:
-                locator.getBottomBarController().addMessageToStatusBar("Competition of neurons of the hidden layer");
+                locator.getBottomBarController().addMessageToStatusBar("Competition of neurons of the hidden layer" +
+                        "\n Outputs of the hidden layer neurons are shown inside of them.");
                 runCompetitionPhaseOne();
                 LearningState = LearningStates.UPDATING_HIDDEN_LAYER_WEIGHTS;
                 break;
@@ -88,16 +90,20 @@ public abstract class CPModel {
                 break;
             case UPDATING_OUTER_LAYER_WEIGHTS:
                 locator.getBottomBarController().addMessageToStatusBar("Updating output layer neuron's weights "+
-                        "(those leading to the hidden layer's victorious neuron)");
+                        "(those leading to the hidden layer's victorious neuron)" +
+                        "\n Neurons output values are shown inside them and their color represents the value in relevant color model.");
                 updateOutputLayerWeights();
                 if(CurrentStep < Steps*dataset.size()) {
                     LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_TWO;
                     CurrentStep++;
                 }else{
-                    cleanAfterLastOutputLayerUpdate();
-                    locator.getAppStateCarrier().learningSuccesfullyFinished();
-                    LearningFinished = true;
+                    LearningState = LearningStates.LEARNING_FINISHED;
                 }
+                break;
+            case LEARNING_FINISHED:
+                cleanAfterLastOutputLayerUpdate();
+                locator.getAppStateCarrier().learningSuccesfullyFinished();
+                LearningFinished = true;
                 break;
         }
     }

@@ -121,10 +121,10 @@ public class HiddenLayerNeuron extends Neuron {
                     (weightsSecond.get(0)*255)+","
                     +(weightsSecond.get(1)*255)+","
                     +(weightsSecond.get(2)*255)+
-                    ") 0.5,rgb("
-                    +(weightsFirst.get(0)*255)+","
-                    +(weightsFirst.get(1)*255)+","
-                    +(weightsFirst.get(2)*255)+") 0.5);");
+                    ") 0.5,hsb("
+                    +Math.round((weightsFirst.get(0)*360))+","
+                    +(weightsFirst.get(1)*100)+"%,"
+                    +(weightsFirst.get(2)*100)+"%) 0.5);");
         }else{
             //FORWARD ONLY
             this.setFill(new Color(weightsFirst.get(0), weightsFirst.get(1), weightsFirst.get(2),1));

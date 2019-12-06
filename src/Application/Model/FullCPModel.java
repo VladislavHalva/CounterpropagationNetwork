@@ -235,31 +235,16 @@ public class FullCPModel extends CPModel{
     }
 
     private void updateNeuronWeights(HiddenLayerNeuron neuron) {
-        System.out.println("Input1: " + firstInputVector.get(0).getValue() + ", " + firstInputVector.get(1).getValue() + ", " + firstInputVector.get(2).getValue());
-        System.out.println("Input2: " + secondInputVector.get(0).getValue() + ", " + secondInputVector.get(1).getValue() + ", " + secondInputVector.get(2).getValue());
-
-        System.out.println("Old1: " + neuron.weightsFirst.get(0) + " " + neuron.weightsFirst.get(1) + " " + neuron.weightsFirst.get(2));
-        System.out.println("Old2: " + neuron.weightsSecond.get(0) + " " + neuron.weightsSecond.get(1) + " " + neuron.weightsSecond.get(2));
-
         for (int i = 0; i < neuron.weightsFirst.size(); i++) {
             neuron.weightsFirst.set(i, neuron.weightsFirst.get(i) +
                     LearningCoeff*(firstInputVector.get(i).getValue() - neuron.weightsFirst.get(i)));
-
-            System.out.println("Diff first " + i + ": " + (neuron.weightsFirst.get(i) +
-                    LearningCoeff*(firstInputVector.get(i).getValue() - neuron.weightsFirst.get(i))));
         }
 
         for (int i = 0; i < neuron.weightsSecond.size(); i++) {
             neuron.weightsSecond.set(i, neuron.weightsSecond.get(i) +
                     LearningCoeff*(secondInputVector.get(i).getValue() - neuron.weightsSecond.get(i)));
-
-            System.out.println("Diff second " + i + ": " + (neuron.weightsSecond.get(i) +
-                    LearningCoeff*(secondInputVector.get(i).getValue() - neuron.weightsSecond.get(i))));
         }
         neuron.updateNeuronColorAccordingToWeights();
-
-        System.out.println("New1: " + neuron.weightsFirst.get(0) + " " + neuron.weightsFirst.get(1) + " " + neuron.weightsFirst.get(2));
-        System.out.println("New2: " + neuron.weightsSecond.get(0) + " " + neuron.weightsSecond.get(1) + " " + neuron.weightsSecond.get(2) + "\n");
     }
 
 
@@ -290,4 +275,51 @@ public class FullCPModel extends CPModel{
         }
         return 0;
     }
+
+    @Override
+    public void runRecognition(Double[] vector1, Double[] vector2) {
+        cleanAfterPossiblePreviousRecognition();
+
+        //attach input vectors
+        for (int i = 0; i < firstInputVector.size(); i++) {
+            firstInputVector.get(i).setValue(vector1[i]);
+        }
+        for (int i = 0; i < secondInputVector.size(); i++) {
+            secondInputVector.get(i).setValue(vector2[i]);
+        }
+        locator.getCanvasPaneController().setFirstInputColor(vector1);
+        locator.getCanvasPaneController().setSecondInputColor(vector2);
+
+        //run competition
+        HiddenLayerNeuron closestNeuron = getHLNeuronWithClosestWeightVectors();
+        victoriousHLNeuron = closestNeuron;
+        victoriousHLNeuron.setOutput(1);
+        locator.getCanvasPaneController().highlightWinnerNeuron(closestNeuron);
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.showValue(locator);
+        }
+
+        //show result
+        locator.getCanvasPaneController().showOutputNeuronsColor(firstOutputLayerNeurons, secondOutputLayerNeurons, getVictoriousNeuronIndex(), CPType.FULL);
+        locator.getCanvasPaneController().highlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
+
+        locator.getAppStateCarrier().recognitionFinished();
+    }
+
+    private void cleanAfterPossiblePreviousRecognition() {
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.setOutput(0);
+        }
+
+        if(victoriousHLNeuron != null){
+            for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+                neuron.hideValue(locator);
+            }
+            locator.getCanvasPaneController().hideOutputNeuronsColor(firstOutputLayerNeurons, secondOutputLayerNeurons);
+            locator.getCanvasPaneController().removeHighlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
+            locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
+            victoriousHLNeuron = null;
+        }
+    }
+
 }

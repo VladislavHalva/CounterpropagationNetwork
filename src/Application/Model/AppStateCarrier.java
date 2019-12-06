@@ -40,8 +40,6 @@ public class AppStateCarrier {
             switchButtonActivityAccordingToState(AppStates.LEARNED);
 
             locator.getLeftMenuController().showMessage("LEARNING FINISHED", "", null);
-
-            //TODO ready to evaluation
         }
     }
 
@@ -70,7 +68,27 @@ public class AppStateCarrier {
         locator.getLeftMenuController().enableButtonsAccordingToState(newState);
     }
 
+    public void jumpToOutputLayerLearning(){
+        if(RunningCP != null && AppState == AppStates.LEARNING_RUNNING){
+            RunningCP.jumpToOutputLayerLearning();
+        }
+    }
+
+    public void runRecognition(Double[] vector1, Double[] vector2){
+        if(AppState == AppStates.LEARNED){
+            AppState = AppStates.RECOGNITION_RUNNING;
+            RunningCP.runRecognition(vector1, vector2);
+        }
+    }
+
+    public void recognitionFinished() {
+        if(AppState == AppStates.RECOGNITION_RUNNING){
+            AppState = AppStates.LEARNED;
+        }
+    }
+
     public CPModel getRunningCPModel(){
         return RunningCP;
     }
+
 }

@@ -39,16 +39,16 @@
          </font>
       </Label>
       <Button fx:id="RunRecognitionButton" disable="true" layoutX="26.0" layoutY="353.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="201.0" text="Run With:" />
-      <TextField layoutX="24.0" layoutY="414.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField layoutX="91.0" layoutY="414.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField layoutX="157.0" layoutY="414.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="inputColor11" layoutX="24.0" layoutY="414.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="inputColor12" layoutX="91.0" layoutY="414.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="inputColor13" layoutX="157.0" layoutY="414.0" prefHeight="25.0" prefWidth="62.0" />
       <Label layoutX="24.0" layoutY="391.0" text="Vector 1" />
       <Label layoutX="24.0" layoutY="454.0" text="Vector 2" />
-      <TextField layoutX="157.0" layoutY="480.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField layoutX="90.0" layoutY="480.0" prefHeight="25.0" prefWidth="62.0" />
-      <TextField layoutX="24.0" layoutY="480.0" prefHeight="25.0" prefWidth="62.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="17.0" layoutX="181.0" layoutY="446.0" stroke="BLACK" strokeType="INSIDE" width="37.0" />
-      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="17.0" layoutX="181.0" layoutY="513.0" stroke="BLACK" strokeType="INSIDE" width="37.0" />
+      <TextField fx:id="inputColor21" layoutX="24.0" layoutY="480.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="inputColor22" layoutX="90.0" layoutY="480.0" prefHeight="25.0" prefWidth="62.0" />
+      <TextField fx:id="inputColor23" layoutX="157.0" layoutY="480.0" prefHeight="25.0" prefWidth="62.0" />
+      <Rectangle fx:id="inputColor1Prev" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="17.0" layoutX="181.0" layoutY="446.0" stroke="BLACK" strokeType="INSIDE" width="37.0" />
+      <Rectangle fx:id="inputColor2Prev" arcHeight="5.0" arcWidth="5.0" fill="DODGERBLUE" height="17.0" layoutX="181.0" layoutY="513.0" stroke="BLACK" strokeType="INSIDE" width="37.0" />
 
       <VBox fx:id="MessageBox" layoutX="24.0" layoutY="535.0" maxWidth="201.0" prefWidth="219.0" />
    </children>

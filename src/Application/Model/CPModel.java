@@ -31,8 +31,6 @@ public abstract class CPModel {
         createDataset(datasetSize);
     }
 
-    public abstract void loadNetworkToCanvas();
-
     public void makeStep(){
         switch (LearningState){
             case INITIALIZED:
@@ -108,6 +106,8 @@ public abstract class CPModel {
         }
     }
 
+    public abstract void loadNetworkToCanvas();
+
     protected abstract void cleanAfterLastOutputLayerUpdate();
 
     protected abstract void updateOutputLayerWeights();
@@ -139,6 +139,8 @@ public abstract class CPModel {
             makeStep();
         }
     }
+
+    public abstract void runRecognition(Double[] vector1, Double[] vector2);
 
     private void createDataset(int size){
         dataset = DatasetMaker.createDataset(size);

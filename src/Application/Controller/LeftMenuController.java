@@ -96,9 +96,13 @@ public class LeftMenuController implements Initializable {
     }
 
     private void initRunRecognitionButton() {
+
         RunRecognitionButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
+                setInputOnePreviewColor(null);
+                setInputTwoPreviewColor(null);
+
                 locator.getAppStateCarrier().runRecognition(inputVector1, inputVector2);
             }
         });
@@ -228,7 +232,7 @@ public class LeftMenuController implements Initializable {
     }
 
 
-    public void enableButtonsAccordingToState(AppStates newState) {
+    public void enableButtonsAccordingToState(AppStates newState, CPType cpType) {
         InitializeButton.setDisable(newState != AppStates.READY);
         StepButton.setDisable(newState != AppStates.LEARNING_RUNNING);
         RunButton.setDisable(newState != AppStates.LEARNING_RUNNING);
@@ -238,7 +242,17 @@ public class LeftMenuController implements Initializable {
         ForwardCPButton.setDisable(newState != AppStates.READY);
         FullCPButton.setDisable(true);
 
-        //TODO add other controls
+        //when forward only CP, only one vector is being set as an input
+        if(newState == AppStates.LEARNED && cpType == CPType.FORWARD_ONLY){
+            inputColor21.setDisable(true);
+            inputColor22.setDisable(true);
+            inputColor23.setDisable(true);
+        }
+        else if(newState == AppStates.READY){
+            inputColor21.setDisable(false);
+            inputColor22.setDisable(false);
+            inputColor23.setDisable(false);
+        }
     }
 
     public void showMessage(String title, String text, Paint textColor){
@@ -320,53 +334,14 @@ public class LeftMenuController implements Initializable {
         inputColor22.setTextFormatter(getNormDoubleFormatter());
         inputColor23.setTextFormatter(getNormDoubleFormatter());
 
-        inputColor11.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                inputVector1[0] = Double.parseDouble(inputColor11.getText());
-                changeInputColor1();
-            }
-        });
+        //set handlers to change colors
+        inputColor11.setOnAction(this::setInputOnePreviewColor);
+        inputColor12.setOnAction(this::setInputOnePreviewColor);
+        inputColor13.setOnAction(this::setInputOnePreviewColor);
 
-        inputColor12.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                inputVector1[1] = Double.parseDouble(inputColor12.getText());
-                changeInputColor1();
-            }
-        });
-
-        inputColor13.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                inputVector1[2] = Double.parseDouble(inputColor13.getText());
-                changeInputColor1();
-            }
-        });
-
-        inputColor21.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                inputVector2[0] = Double.parseDouble(inputColor21.getText());
-                changeInputColor2();
-            }
-        });
-
-        inputColor22.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                inputVector2[1] = Double.parseDouble(inputColor22.getText());
-                changeInputColor2();
-            }
-        });
-
-        inputColor23.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent actionEvent) {
-                inputVector2[2] = Double.parseDouble(inputColor23.getText());
-                changeInputColor2();
-            }
-        });
+        inputColor21.setOnAction(this::setInputTwoPreviewColor);
+        inputColor22.setOnAction(this::setInputTwoPreviewColor);
+        inputColor23.setOnAction(this::setInputTwoPreviewColor);
     }
 
     private void changeInputColor1(){
@@ -376,4 +351,20 @@ public class LeftMenuController implements Initializable {
     private void changeInputColor2(){
         inputColor2Prev.setFill(Color.hsb(inputVector2[0]*360, inputVector2[1], inputVector2[2],1));
     }
+
+    private void setInputOnePreviewColor(ActionEvent actionEvent) {
+        inputVector1[0] = Double.parseDouble(inputColor11.getText());
+        inputVector1[1] = Double.parseDouble(inputColor12.getText());
+        inputVector1[2] = Double.parseDouble(inputColor13.getText());
+        changeInputColor1();
+    }
+
+    private void setInputTwoPreviewColor(ActionEvent actionEvent) {
+        inputVector2[0] = Double.parseDouble(inputColor21.getText());
+        inputVector2[1] = Double.parseDouble(inputColor22.getText());
+        inputVector2[2] = Double.parseDouble(inputColor23.getText());
+        changeInputColor2();
+    }
+
+
 }

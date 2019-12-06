@@ -23,7 +23,7 @@ public class AppStateCarrier {
         if(AppState == AppStates.READY){
             AppState = AppStates.LEARNING_RUNNING;
             this.ChosenCPType = chosenCPType;
-            switchButtonActivityAccordingToState(AppStates.LEARNING_RUNNING);
+            switchButtonActivityAccordingToState(AppStates.LEARNING_RUNNING, chosenCPType);
 
             if(chosenCPType == CPType.FULL){
                 this.RunningCP = new FullCPModel(steps, learningCoeffs, datasetSize, locator);
@@ -37,9 +37,13 @@ public class AppStateCarrier {
     public void learningSuccesfullyFinished(){
         if(AppState == AppStates.LEARNING_RUNNING){
             AppState = AppStates.LEARNED;
-            switchButtonActivityAccordingToState(AppStates.LEARNED);
+            switchButtonActivityAccordingToState(AppStates.LEARNED, ChosenCPType);
 
             locator.getLeftMenuController().showMessage("LEARNING FINISHED", "", null);
+            locator.getBottomBarController().addMessageToStatusBar("First input vector is RGB color representation. Second vector " +
+                    "is HSV color representation." +
+                    "\n All values are from <0,1> range. In case of hue in HSV, the required value is hue/360°." +
+                    "\n To view a vector color preview, hit ENTER when values are set.");
         }
     }
 
@@ -49,7 +53,7 @@ public class AppStateCarrier {
             this.RunningCP = null;
             locator.getBottomBarController().cleanStatusBar();
             locator.getCanvasPaneController().cleanCanvas();
-            switchButtonActivityAccordingToState(AppStates.READY);
+            switchButtonActivityAccordingToState(AppStates.READY, ChosenCPType);
     }
 
     public void makeLearningStep(){
@@ -64,8 +68,8 @@ public class AppStateCarrier {
         }
     }
 
-    public void switchButtonActivityAccordingToState(AppStates newState){
-        locator.getLeftMenuController().enableButtonsAccordingToState(newState);
+    public void switchButtonActivityAccordingToState(AppStates newState, CPType cpType){
+        locator.getLeftMenuController().enableButtonsAccordingToState(newState, cpType);
     }
 
     public void jumpToOutputLayerLearning(){

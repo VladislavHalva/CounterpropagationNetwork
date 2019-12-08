@@ -41,15 +41,18 @@ public class CanvasPaneController implements Initializable {
         SecondInputColorPreview.setStrokeWidth(1);
     }
 
+    public void storeCLocatorReference(CLocator locator){
+        this.locator = locator;
+    }
 
-    /**
-     *
-     * @param hiddenLayerNeurons
-     * @param firstInputVector
-     * @param secondInputVector
-     * @param firstOutputLayerNeurons
-     * @param secondOutputLayerNeurons
-     */
+    public AnchorPane getCanvasPane(){
+        return CanvasPane;
+    }
+
+    public void cleanCanvas(){
+        CanvasPane.getChildren().clear();
+    }
+
     public void drawFullCPNetwork(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons, ArrayList<InputPoint> firstInputVector,
                                   ArrayList<InputPoint> secondInputVector, ArrayList<OutputLayerNeuron> firstOutputLayerNeurons,
                                   ArrayList<OutputLayerNeuron> secondOutputLayerNeurons) {
@@ -142,12 +145,6 @@ public class CanvasPaneController implements Initializable {
         CanvasPane.getChildren().addAll(secondOutputLayerNeurons);
     }
 
-    /**
-     *
-     * @param hiddenLayerNeurons
-     * @param outputLayerNeurons
-     * @param inputVector
-     */
     public void drawForwardCPNetwork(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons,
                                      ArrayList<OutputLayerNeuron> outputLayerNeurons,
                                      ArrayList<InputPoint> inputVector){
@@ -208,11 +205,7 @@ public class CanvasPaneController implements Initializable {
         CanvasPane.getChildren().addAll(outputLayerNeurons);
     }
 
-    /**
-     *
-     * @param neurons
-     */
-    public void hightlightConnectionsOfGivenNeurons(ArrayList<? extends Neuron> neurons){
+    public void highlightConnectionsOfGivenNeurons(ArrayList<? extends Neuron> neurons){
         for(Neuron neuron : neurons){
             for(Line connection : neuron.getConnections()){
                 connection.setStroke(new Color(0.0, 1.0, 0.0, 1.0));
@@ -221,7 +214,7 @@ public class CanvasPaneController implements Initializable {
         }
     }
 
-    public void removeHightlightConnectionsOfGivenNeurons(ArrayList<? extends Neuron> neurons){
+    public void removeHighlightConnectionsOfGivenNeurons(ArrayList<? extends Neuron> neurons){
         if(neurons != null) {
             for (Neuron neuron : neurons) {
                 for (Line connection : neuron.getConnections()) {
@@ -230,14 +223,6 @@ public class CanvasPaneController implements Initializable {
                 }
             }
         }
-    }
-
-    public void cleanCanvas(){
-        CanvasPane.getChildren().clear();
-    }
-
-    public void storeCLocatorReference(CLocator locator){
-        this.locator = locator;
     }
 
     public void highlightWinnerNeuron(HiddenLayerNeuron neuron) {
@@ -295,10 +280,6 @@ public class CanvasPaneController implements Initializable {
             connection.setStroke(new Color(0,0,0,1));
             connection.setStrokeWidth(1);
         }
-    }
-
-    public AnchorPane getCanvasPane(){
-        return CanvasPane;
     }
 
     public void setFirstInputColor(Double color[]){

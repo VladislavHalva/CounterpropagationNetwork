@@ -9,21 +9,33 @@ import java.util.ArrayList;
 
 
 public abstract class CPModel {
-    protected CLocator locator;
+    CLocator locator;
 
-    protected int Steps;
-    protected double LearningCoeff;
-    protected ArrayList<Pair<double[], double[]>> dataset = null;
-    protected HiddenLayerNeuron victoriousHLNeuron = null;
+    //Learning cycles
+    private int Steps;
+    int CurrentStep = 1;
+    double LearningCoeff;
 
-    //used for run, and jump to phase two
-    protected Boolean LearningFinished = false;
-    protected Boolean LearningPhaseTwoInitialized = false;
+    //dataset - loaded in ctor, according to dataset size
+    ArrayList<Pair<double[], double[]>> dataset = null;
 
-    protected int CurrentStep = 1;
-    protected LearningStates LearningState = LearningStates.INITIALIZED;
+    //temporarily stores ref. to a victorious neuron between learning steps
+    HiddenLayerNeuron victoriousHLNeuron = null;
 
-    public CPModel(int steps, double learningCoeff, int datasetSize, CLocator locator){
+    //Learning States managing variables
+    private Boolean LearningFinished = false;
+    private Boolean LearningPhaseTwoInitialized = false;
+    private LearningStates LearningState = LearningStates.INITIALIZED;
+
+
+    /**
+     * Randomly generates dataset of given size and stores required vars in attributes.
+     * @param steps
+     * @param learningCoeff
+     * @param datasetSize
+     * @param locator
+     */
+    CPModel(int steps, double learningCoeff, int datasetSize, CLocator locator){
         this.Steps = steps;
         this.LearningCoeff = learningCoeff;
         this.locator = locator;
@@ -31,32 +43,33 @@ public abstract class CPModel {
         createDataset(datasetSize);
     }
 
-    public void makeStep(){
+    /**
+     * Called when Step button is hit. According to current learning state executes relevant operation.
+     */
+    void makeStep(){
         switch (LearningState){
             case INITIALIZED:
-                locator.getBottomBarController().addMessageToStatusBar("Learning initialized - hidden layer neurons learning" +
-                        "\n Hidden layer neurons colors represent their weights values in relevant color model.");
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().initMessage);
                 LearningState = LearningStates.HIDDEN_LAYER_WEIGHTS_GENERATE;
                 break;
             case HIDDEN_LAYER_WEIGHTS_GENERATE:
-                locator.getBottomBarController().addMessageToStatusBar("Generating random hidden layer neuron's weights from <0,1>");
                 generateHiddenLayerWeights();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().weightsGenHiddenMessage);
                 LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_ONE;
                 break;
             case INPUT_VECTOR_ATTACH_PHASE_ONE:
-                locator.getBottomBarController().addMessageToStatusBar("Vector from training set attached to input");
                 attachInputVectorsPhaseOne();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().vectorAttachPhaseOneMessage);
                 LearningState = LearningStates.COMPETITION_PHASE_ONE;
                 break;
             case COMPETITION_PHASE_ONE:
-                locator.getBottomBarController().addMessageToStatusBar("Competition of neurons of the hidden layer" +
-                        "\n Outputs of the hidden layer neurons are shown inside of them.");
                 runCompetitionPhaseOne();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().competitionPhaseOneMessage);
                 LearningState = LearningStates.UPDATING_HIDDEN_LAYER_WEIGHTS;
                 break;
             case UPDATING_HIDDEN_LAYER_WEIGHTS:
-                locator.getBottomBarController().addMessageToStatusBar("Updating victorious hidden layer neuron's weights");
                 updateHiddenLayerWeights();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().updateWeightsPhaseOneMessage);
                 if(CurrentStep < Steps*dataset.size()) {
                     LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_ONE;
                     CurrentStep++;
@@ -66,31 +79,29 @@ public abstract class CPModel {
                 }
                 break;
             case PHASE_TWO_INITIALIZED:
-                locator.getBottomBarController().addMessageToStatusBar("Output layer neurons learning initialized");
-                LearningPhaseTwoInitialized = true;
                 initializePhaseTwo();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().phaseTwoInitMessage);
+                LearningPhaseTwoInitialized = true;
                 LearningState = LearningStates.OUTPUT_LAYER_WEIGHTS_GENERATE;
                 break;
             case OUTPUT_LAYER_WEIGHTS_GENERATE:
-                locator.getBottomBarController().addMessageToStatusBar("Generating random output layer neuron's weights from <0,1>");
                 generateOutputLayerWeights();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().weightsGenOutMessage);
                 LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_TWO;
                 break;
             case INPUT_VECTOR_ATTACH_PHASE_TWO:
-                locator.getBottomBarController().addMessageToStatusBar("Vector from training set attached to input");
                 attachInputVectorsPhaseTwo();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().vectorAttachPhaseTwoMessage);
                 LearningState = LearningStates.COMPETITION_PHASE_TWO;
                 break;
             case COMPETITION_PHASE_TWO:
-                locator.getBottomBarController().addMessageToStatusBar("Competition of neurons of the hidden layer");
                 runCompetitionPhaseTwo();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().competitionPhaseTwoMessage);
                 LearningState = LearningStates.UPDATING_OUTER_LAYER_WEIGHTS;
                 break;
             case UPDATING_OUTER_LAYER_WEIGHTS:
-                locator.getBottomBarController().addMessageToStatusBar("Updating output layer neuron's weights "+
-                        "(those leading to the hidden layer's victorious neuron)" +
-                        "\n Neurons output values are shown inside them and their color represents the value in relevant color model.");
                 updateOutputLayerWeights();
+                locator.getBottomBarController().addMessageToStatusBar(locator.getBottomBarController().updateWeightsPhaseTwoMessage);
                 if(CurrentStep < Steps*dataset.size()) {
                     LearningState = LearningStates.INPUT_VECTOR_ATTACH_PHASE_TWO;
                     CurrentStep++;
@@ -106,44 +117,59 @@ public abstract class CPModel {
         }
     }
 
-    public abstract void loadNetworkToCanvas();
-
-    protected abstract void cleanAfterLastOutputLayerUpdate();
-
-    protected abstract void updateOutputLayerWeights();
-
-    protected abstract void runCompetitionPhaseTwo();
-
-    protected abstract void attachInputVectorsPhaseTwo();
-
-    protected abstract void generateOutputLayerWeights();
-
-    protected abstract void initializePhaseTwo();
-
-    protected abstract void updateHiddenLayerWeights();
-
-    protected abstract void runCompetitionPhaseOne();
-
-    protected abstract void attachInputVectorsPhaseOne();
-
-    protected abstract void generateHiddenLayerWeights();
-
-    public void run(){
+    /**
+     * Called when run button is hit. Calls makeStep while learning is finished.
+     */
+    void run(){
         while(!LearningFinished){
             makeStep();
         }
     }
 
-    public void jumpToOutputLayerLearning(){
+    /**
+     * Called when jump to output layer learning button is hit. Calls makeStep while
+     * output layer learning initialized state is reached.
+     */
+    void jumpToOutputLayerLearning(){
         while(!LearningPhaseTwoInitialized){
             makeStep();
         }
     }
 
-    public abstract void runRecognition(Double[] vector1, Double[] vector2);
-
+    /**
+     * Generates dataset of random values (color pair in RGB and HSV model).
+     * @param size
+     */
     private void createDataset(int size){
         dataset = DatasetMaker.createDataset(size);
     }
+
+    public abstract void loadNetworkToCanvas();
+
+    public abstract void runRecognition(Double[] vector1, Double[] vector2);
+
+    protected abstract void cleanAfterLastOutputLayerUpdate();
+
+    /**
+     * Following methods are called from makeStep and represent the learning process steps.
+     */
+
+    protected abstract void generateHiddenLayerWeights();
+
+    protected abstract void attachInputVectorsPhaseOne();
+
+    protected abstract void runCompetitionPhaseOne();
+
+    protected abstract void updateHiddenLayerWeights();
+
+    protected abstract void initializePhaseTwo();
+
+    protected abstract void generateOutputLayerWeights();
+
+    protected abstract void attachInputVectorsPhaseTwo();
+
+    protected abstract void runCompetitionPhaseTwo();
+
+    protected abstract void updateOutputLayerWeights();
 }
 

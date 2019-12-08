@@ -32,7 +32,7 @@ public class LeftMenuController implements Initializable {
     private double LearnCoeff = 0.5;
     private int Steps = 2;
     private int DatasetSize = 10;
-    private int StepsLimit = 100;
+    private int StepsLimit = 10000;
 
     private Double[] inputVector1 = {0.0,0.0,0.0};
     private Double[] inputVector2 = {0.0,0.0,0.0};

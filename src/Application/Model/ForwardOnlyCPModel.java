@@ -9,27 +9,13 @@ import java.util.ArrayList;
 
 public class ForwardOnlyCPModel extends CPModel {
 
+    private ArrayList<InputPoint> inputVector = new ArrayList<>();
     private ArrayList<HiddenLayerNeuron> hiddenLayerNeurons =  new ArrayList<>();
     private ArrayList<OutputLayerNeuron> outputLayerNeurons = new ArrayList<>();
-    private ArrayList<InputPoint> inputVector = new ArrayList<>();
 
-    /**
-     * Ctor
-     * @param steps
-     * @param learningCoeff
-     */
-    public ForwardOnlyCPModel(int steps, double learningCoeff, int datasetSize, CLocator locator) {
+    ForwardOnlyCPModel(int steps, double learningCoeff, int datasetSize, CLocator locator) {
         super(steps, learningCoeff, datasetSize, locator);
         loadNetworkToCanvas();
-    }
-
-    @Override
-    public void loadNetworkToCanvas() {
-        createNeuronsAndInputPoints();
-        locator.getCanvasPaneController().drawForwardCPNetwork(
-                hiddenLayerNeurons,
-                outputLayerNeurons,
-                inputVector);
     }
 
     @Override
@@ -37,13 +23,13 @@ public class ForwardOnlyCPModel extends CPModel {
         for(HiddenLayerNeuron hiddenLayerNeuron : hiddenLayerNeurons){
             hiddenLayerNeuron.generateRandomWeights();
         }
-        locator.getCanvasPaneController().hightlightConnectionsOfGivenNeurons(hiddenLayerNeurons);
+        locator.getCanvasPaneController().highlightConnectionsOfGivenNeurons(hiddenLayerNeurons);
     }
 
     @Override
     protected void attachInputVectorsPhaseOne() {
         //remove highlight after generating weights
-        locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(hiddenLayerNeurons);
+        locator.getCanvasPaneController().removeHighlightConnectionsOfGivenNeurons(hiddenLayerNeurons);
         //remove highlight of neuron in case of learning loop
         locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
         locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
@@ -103,7 +89,7 @@ public class ForwardOnlyCPModel extends CPModel {
         for(OutputLayerNeuron neuron : outputLayerNeurons){
             neuron.generateRandomWeights();
         }
-        locator.getCanvasPaneController().hightlightConnectionsOfGivenNeurons(outputLayerNeurons);
+        locator.getCanvasPaneController().highlightConnectionsOfGivenNeurons(outputLayerNeurons);
     }
 
     @Override
@@ -115,7 +101,7 @@ public class ForwardOnlyCPModel extends CPModel {
         }
         victoriousHLNeuron = null;
         locator.getCanvasPaneController().removeHighlightOutputsConnectionsToWinner(getConnectionsFromOutputToWinnerNeuron());
-        locator.getCanvasPaneController().removeHightlightConnectionsOfGivenNeurons(outputLayerNeurons);
+        locator.getCanvasPaneController().removeHighlightConnectionsOfGivenNeurons(outputLayerNeurons);
 
         Double[] inputColor = {0.0,0.0,0.0};
         //attach the input vector
@@ -173,7 +159,7 @@ public class ForwardOnlyCPModel extends CPModel {
             inputVector.add(new InputPoint());
         }
         for (int i = 0; i < 6; i++) {
-            hiddenLayerNeurons.add(new HiddenLayerNeuron(inputVector, CPType.FORWARD_ONLY));
+            hiddenLayerNeurons.add(new HiddenLayerNeuron(inputVector));
         }
         for (int i = 0; i < 3; i++) {
             outputLayerNeurons.add(new OutputLayerNeuron(hiddenLayerNeurons, CPType.FORWARD_ONLY));
@@ -185,6 +171,7 @@ public class ForwardOnlyCPModel extends CPModel {
 
         for(int i = 0; i < hiddenLayerNeurons.size(); i++){
             double distance = 0.0;
+            //d = sqrt((w1-i1)^2+(w2-i2)^2+(w3-i2)^2)
             distance = Math.sqrt(Math.pow(hiddenLayerNeurons.get(i).weightsFirst.get(0) - inputVector.get(0).getValue(),2) +
                     Math.pow(hiddenLayerNeurons.get(i).weightsFirst.get(1) - inputVector.get(1).getValue(),2) +
                     Math.pow(hiddenLayerNeurons.get(i).weightsFirst.get(2) - inputVector.get(2).getValue(),2)
@@ -269,5 +256,14 @@ public class ForwardOnlyCPModel extends CPModel {
             locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
             victoriousHLNeuron = null;
         }
+    }
+
+    @Override
+    public void loadNetworkToCanvas() {
+        createNeuronsAndInputPoints();
+        locator.getCanvasPaneController().drawForwardCPNetwork(
+                hiddenLayerNeurons,
+                outputLayerNeurons,
+                inputVector);
     }
 }

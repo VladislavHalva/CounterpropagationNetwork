@@ -90,9 +90,4 @@ public class AppStateCarrier {
             AppState = AppStates.LEARNED;
         }
     }
-
-    public CPModel getRunningCPModel(){
-        return RunningCP;
-    }
-
 }

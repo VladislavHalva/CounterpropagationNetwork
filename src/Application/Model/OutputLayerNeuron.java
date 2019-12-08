@@ -13,12 +13,12 @@ public class OutputLayerNeuron extends Neuron {
 
     public OutputLayerNeuron(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons, CPType cpType){
         super(cpType);
-        createConnectionToHiddenLayer(hiddenLayerNeurons);
+        createConnectionLines(hiddenLayerNeurons);
         initWeightsVector();
     }
 
     /**
-     *
+     * Initializes all weight to zero.
      */
     private void initWeightsVector() {
         for (int i = 0; i < 6; i++) {
@@ -27,7 +27,7 @@ public class OutputLayerNeuron extends Neuron {
     }
 
     /**
-     *
+     * Generates random weights from <0,1>.
      */
     @Override
     public void generateRandomWeights(){
@@ -38,7 +38,11 @@ public class OutputLayerNeuron extends Neuron {
         }
     }
 
-    private void createConnectionToHiddenLayer(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons) {
+    /**
+     * Creates the line, that represents the connections of input and hidden layer neurons.
+     * @param hiddenLayerNeurons
+     */
+    private void createConnectionLines(ArrayList<HiddenLayerNeuron> hiddenLayerNeurons) {
         for(HiddenLayerNeuron hiddenLayerNeuron : hiddenLayerNeurons){
             Line connection = new Line();
 

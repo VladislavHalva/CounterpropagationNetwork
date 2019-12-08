@@ -25,15 +25,9 @@ public class MainWindowController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
-
         this.createAndInjectLocator();
     }
 
-
-    /**
-     *
-     */
     private void createAndInjectLocator()
     {
         //create new locator instance and inject it to other controllers

@@ -12,33 +12,36 @@ import java.util.Random;
 public class HiddenLayerNeuron extends Neuron {
 
     ArrayList<Double> weightsFirst = new ArrayList<>();
+    //unused in case of Forward-only counterpropagation
     ArrayList<Double> weightsSecond = new ArrayList<>();
+
+    //lines, that represent the connections of neurons and input
     ArrayList<Line> firstWeightLines = new ArrayList<>();
     ArrayList<Line> secondWeightLines = new ArrayList<>();
 
     /**
-     * Forward only ctor
+     * Constructor for Forward-only counterpropagation. Initialized weights to zero.
      * @param firstInputVector
      */
-    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, CPType cpType){
-        super(cpType);
+    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector){
+        super(CPType.FORWARD_ONLY);
         createConnectionToInput(firstInputVector);
         initWeightsVectors();
     }
 
     /**
-     * Full ctor
+     * Constructor for Full counterpropagation. Initializes weights to zero.
      * @param firstInputVector
      * @param secondInputVector
      */
-    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, ArrayList<InputPoint> secondInputVector, CPType cpType){
-        super(cpType);
+    public HiddenLayerNeuron(ArrayList<InputPoint> firstInputVector, ArrayList<InputPoint> secondInputVector){
+        super(CPType.FULL);
         createConnectionsToInputs(firstInputVector, secondInputVector);
         initWeightsVectors();
     }
 
     /**
-     *
+     * Initializes all weights to zero.
      */
     private void initWeightsVectors() {
         for (int i = 0; i < 3; i++) {
@@ -48,7 +51,7 @@ public class HiddenLayerNeuron extends Neuron {
     }
 
     /**
-     *
+     * Generates random weights from <0,1>. Sets the colors of neurons according to colors.
      */
     @Override
     public void generateRandomWeights(){
@@ -77,7 +80,7 @@ public class HiddenLayerNeuron extends Neuron {
     }
 
     /**
-     * Forward only connections
+     * Creates connections from neurons to inputs - Forward-only CP
      * @param firstInputVector
      */
     private void createConnectionToInput(ArrayList<InputPoint> firstInputVector) {
@@ -85,7 +88,7 @@ public class HiddenLayerNeuron extends Neuron {
     }
 
     /**
-     * Full connections
+     * Creates connections from neurons to inputs - Full CP
      * @param firstInputVector
      * @param secondInputVector
      */
@@ -94,6 +97,12 @@ public class HiddenLayerNeuron extends Neuron {
         createConnectionLines(secondInputVector, secondWeightLines);
     }
 
+
+    /**
+     * Creates the line, that represents the connections of input and hidden layer neurons.
+     * @param inputVector
+     * @param weightLines
+     */
     private void createConnectionLines(ArrayList<InputPoint> inputVector, List<Line> weightLines) {
         for(InputPoint firstInput : inputVector){
             Line connection = new Line();
@@ -115,6 +124,9 @@ public class HiddenLayerNeuron extends Neuron {
         return connections;
     }
 
+    /**
+     * Changes the neurons color, when its weights values change.
+     */
     public void updateNeuronColorAccordingToWeights(){
         if(cpType == CPType.FULL){
             this.setStyle("-fx-fill:linear-gradient( from 100.0% 100.0% to 100.0% 0.0%, rgb("+
@@ -131,6 +143,11 @@ public class HiddenLayerNeuron extends Neuron {
         }
     };
 
+
+    /**
+     * Sets the output property.
+     * @param output
+     */
     @Override
     public void setOutput(double output){
             Output = output;

@@ -5,7 +5,7 @@ import javafx.util.Pair;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class DatasetMaker {
+public class DatasetGenerator {
 
     public static ArrayList<Pair<double[], double[]>> createDataset(int size){
         ArrayList<Pair<double[], double[]>> dataset = new ArrayList<>();

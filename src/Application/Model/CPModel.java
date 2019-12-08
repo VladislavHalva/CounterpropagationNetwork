@@ -1,6 +1,6 @@
 package Application.Model;
 
-import Application.AdditionalClasses.DatasetMaker;
+import Application.AdditionalClasses.DatasetGenerator;
 import Application.Controller.CLocator;
 import Application.Enums.LearningStates;
 import javafx.util.Pair;
@@ -141,7 +141,7 @@ public abstract class CPModel {
      * @param size
      */
     private void createDataset(int size){
-        dataset = DatasetMaker.createDataset(size);
+        dataset = DatasetGenerator.createDataset(size);
     }
 
     public abstract void loadNetworkToCanvas();

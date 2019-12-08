@@ -225,7 +225,7 @@ public class CanvasPaneController implements Initializable {
         }
     }
 
-    public void highlightWinnerNeuron(HiddenLayerNeuron neuron) {
+    public void highlightVictoriousNeuron(HiddenLayerNeuron neuron) {
         neuron.setStroke(new Color(0,1,0,1));
         neuron.setStrokeWidth(3);
     }

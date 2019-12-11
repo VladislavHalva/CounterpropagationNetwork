@@ -64,11 +64,6 @@ public class ForwardOnlyCPModel extends CPModel {
 
     @Override
     protected void updateHiddenLayerWeights() {
-        //clean after previous step
-        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
-            neuron.hideValue(locator);
-        }
-
         updateNeuronWeights(victoriousHLNeuron);
 
         //highlights updated weights
@@ -212,6 +207,11 @@ public class ForwardOnlyCPModel extends CPModel {
     }
 
     private void cleanAfterUpdateHiddenLayerWeights(){
+        //clean after previous step
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.hideValue(locator);
+        }
+
         locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
         locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
         if(victoriousHLNeuron != null){

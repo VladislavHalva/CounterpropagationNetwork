@@ -75,11 +75,6 @@ public class FullCPModel extends CPModel{
 
     @Override
     protected void updateHiddenLayerWeights() {
-        //clean after previous step
-        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
-            neuron.hideValue(locator);
-        }
-
         updateNeuronWeights(victoriousHLNeuron);
 
         //highlight updated values
@@ -220,6 +215,12 @@ public class FullCPModel extends CPModel{
     }
 
     private void cleanAfterUpdateHiddenLayerWeights() {
+        //clean after previous step
+        for(HiddenLayerNeuron neuron : hiddenLayerNeurons){
+            neuron.hideValue(locator);
+        }
+
+
         //remove highlight of neuron in case of learning loop
         locator.getCanvasPaneController().removeHighlightWinnerNeuron(victoriousHLNeuron);
         locator.getCanvasPaneController().removeHighlightWeightsOfSingleNeuron(victoriousHLNeuron);
